@@ -75,7 +75,7 @@ if __name__ == "__main__":
     dataroot='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset'
     pkl_file='dictionary.pkl'
     fasttext_filename="/content/drive/MyDrive/College_paper/fast-models/cc.ml.300.bin"
-    data_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/'
+    data_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/'
 
     train_questions_filenames=os.path.join(dataroot,"vgenome_train2021_questions.json")
     train_answer_filenames=os.path.join(dataroot,"vgenome_train2021_answers.json")
