@@ -24,8 +24,8 @@ def image_feats_converter(filenames):
     if os.path.exists(filenames['train_ids_file']) and os.path.exists(filenames['val_ids_file']):
         print(filenames['train_ids_file'])
         print(filenames['val_ids_file'])
-        train_imgids = cPickle.load(open(filenames['train_ids_file'],'rb'))
-        val_imgids = cPickle.load(open(filenames['val_ids_file'],'rb'))
+        train_imgids = cPickle.load(open(filenames['train_ids_file'],'rb')).tolist()
+        val_imgids = cPickle.load(open(filenames['val_ids_file'],'rb')).tolist()
     else:
         with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/train_imgids.pkl', 'rb') as f:
             train_imgids = cPickle.load(f).tolist()
