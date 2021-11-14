@@ -35,7 +35,7 @@ def _load_dataset(dataroot, name, img_id2val):
     name: 'train', 'val'
     """
     question_path = os.path.join(
-        dataroot, 'v2_OpenEnded_mscoco_%s2014_questions.json' % name)
+        dataroot, 'vgenome_%s2021_questions.json' % name)
     questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
     answer_path = os.path.join(dataroot, 'cache', '%s_target_yes_no.pkl' % name)
@@ -91,7 +91,7 @@ class VQADataset(Dataset):
         #initializations
         self.img_root=image_root_dir
         self.data_root=dataroot
-        self.img_dir=os.path.join(image_root_dir,choice+"2014")
+        self.img_dir=os.path.join(image_root_dir,'VG_100k')
         #print(os.path.exists(self.img_dir))
         self.choice=choice
         self.transform=transform_set
