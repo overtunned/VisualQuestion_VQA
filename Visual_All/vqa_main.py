@@ -20,7 +20,7 @@ def question_parse(token_list):
     word_list=[]
 
     for idval in token_list.tolist():
-        if(idval==2000000):
+        if(idval==56478):
             word_list.append(index2word_map[idval-1])
         else:
             word_list.append(index2word_map[idval])
@@ -31,8 +31,8 @@ def preproc_question_tokens(question_array):
 
     num_questions,seq_length=question_array.shape
     for i in np.arange(num_questions):
-        index=np.where(question_array==19901)
-        question_array[index]=19900
+        index=np.where(question_array==56478)
+        question_array[index]=56477
     return(question_array)
 
 def convert_one_hot2int(one_hot):

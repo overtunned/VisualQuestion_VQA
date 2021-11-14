@@ -53,10 +53,10 @@ def main_run(dataroot,pkl_filename,glove_filename,filenames_dict,image_filenames
     np.save('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/glove6b_init_%dd.npy' % emb_dim, weights)
 
     #extract the raw data from json
-    train_questions = json.load(open(filenames_dict['train_question_file']))['questions']
-    train_answers = json.load(open(filenames_dict['train_answer_file']))['annotations']
-    validation_questions = json.load(open(filenames_dict['validation_question_file']))['questions']
-    validation_answers = json.load(open(filenames_dict['validation_answer_file']))['annotations']
+    train_questions = json.load(open(filenames_dict['train_question_file']))
+    train_answers = json.load(open(filenames_dict['train_answer_file']))
+    validation_questions = json.load(open(filenames_dict['validation_question_file']))
+    validation_answers = json.load(open(filenames_dict['validation_answer_file']))
 
     #generate the question labels and the id maps 
     answers = train_answers + validation_answers
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     dataroot='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset'
     pkl_file='dictionary.pkl'
     fasttext_filename="/content/drive/MyDrive/College_paper/fast-models/cc.ml.300.bin"
-    data_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/'
+    data_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/'
 
     train_questions_filenames=os.path.join(dataroot,"vgenome_train2021_questions.json")
     train_answer_filenames=os.path.join(dataroot,"vgenome_train2021_answers.json")
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     filenames_dict={'train_question_file':train_questions_filenames,'train_answer_file':train_answer_filenames,
                     'validation_question_file':val_questions_filenames,'validation_answer_file':val_answer_filenames}
     
-    image_filenames_dict={'train_data_file': data_path + 'hdf5/train36.hdf5','val_data_file': data_path + 'hdf5/val36.hdf5',
+    image_filenames_dict={'train_data_file': data_path + 'data/train36.hdf5','val_data_file': data_path + 'data/val36.hdf5',
                             'train_ids_file': data_path + 'data/train_ids.pkl','val_ids_file': data_path + 'data/val_ids.pkl',
                             'infile':feat_path+'/vg_gqa_obj36.tsv',
                             'train_indices_file': data_path + 'data/train36_imgid2idx.pkl','val_indices_file': data_path + 'data/val36_imgid2idx.pkl'}

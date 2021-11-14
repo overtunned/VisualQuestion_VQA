@@ -28,9 +28,9 @@ def image_feats_converter(filenames):
         val_imgids = cPickle.load(open(filenames['val_ids_file'],'rb'))
     else:
         with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/train_imgids.pkl', 'rb') as f:
-            train_imgids = pickle.load( f)
+            train_imgids = cpickle.load(f)
         with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/val_imgids.pkl', 'rb') as f:
-            val_imgids = pickle.load( f)
+            val_imgids = cpickle.load(f)
         cPickle.dump(train_imgids, open(filenames['train_ids_file'], 'wb'))
         cPickle.dump(val_imgids, open(filenames['val_ids_file'], 'wb'))
 
@@ -53,7 +53,7 @@ def image_feats_converter(filenames):
 
     train_counter = 0
     val_counter = 0
-
+    notfound = []
     print("reading tsv...")
     with open(filenames['infile'], "r") as tsv_in_file:
         reader = csv.DictReader(tsv_in_file, delimiter='\t', fieldnames=FIELDNAMES)
@@ -108,13 +108,18 @@ def image_feats_converter(filenames):
                 val_spatial_img_features[val_counter, :, :] = spatial_features
                 val_counter += 1
             else:
-                assert False, 'Unknown image id: %d' % image_id
+                notfound.append(image_id)
+                continue
 
     if len(train_imgids) != 0:
         print('Warning: train_image_ids is not empty')
 
     if len(val_imgids) != 0:
         print('Warning: val_image_ids is not empty')
+
+    if len(notfound) != 0:
+        print(notfound)
+        print('Warning: %d images not found' % len(notfound))
 
     cPickle.dump(train_indices, open(filenames['train_indices_file'], 'wb'))
     cPickle.dump(val_indices, open(filenames['val_indices_file'], 'wb'))
