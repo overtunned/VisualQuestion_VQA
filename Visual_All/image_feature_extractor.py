@@ -7,7 +7,7 @@ import _pickle as cPickle
 import os
 import base64
 from tqdm import tqdm
-FIELDNAMES = ['image_id', 'image_w', 'image_h', 'num_boxes', 'boxes', 'features']
+FIELDNAMES = ['image_id', 'image_h', 'image_w', "objects_id", "objects_conf", "attrs_id", "attrs_conf", 'num_boxes', 'boxes', 'features']
 feature_length = 2048
 num_fixed_boxes = 36
 
@@ -27,8 +27,10 @@ def image_feats_converter(filenames):
         train_imgids = cPickle.load(open(filenames['train_ids_file'],'rb'))
         val_imgids = cPickle.load(open(filenames['val_ids_file'],'rb'))
     else:
-        train_imgids = utils.load_imageid('data/train2014')
-        val_imgids = utils.load_imageid('data/val2014')
+        with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/train_imgids.pkl', 'rb') as f:
+            train_imgids = pickle.load( f)
+        with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/val_imgids.pkl', 'rb') as f:
+            val_imgids = pickle.load( f)
         cPickle.dump(train_imgids, open(filenames['train_ids_file'], 'wb'))
         cPickle.dump(val_imgids, open(filenames['val_ids_file'], 'wb'))
 
@@ -57,7 +59,7 @@ def image_feats_converter(filenames):
         reader = csv.DictReader(tsv_in_file, delimiter='\t', fieldnames=FIELDNAMES)
         for item in tqdm(reader):
             item['num_boxes'] = int(item['num_boxes'])
-            image_id = int(item['image_id'])
+            image_id = int(item['image_id'][1:])
             image_w = float(item['image_w'])
             image_h = float(item['image_h'])
             bboxes = np.frombuffer(
@@ -79,13 +81,13 @@ def image_feats_converter(filenames):
             scaled_y = scaled_y[..., np.newaxis]
 
             spatial_features = np.concatenate(
-                (scaled_x,
-                 scaled_y,
-                 scaled_x + scaled_width,
-                 scaled_y + scaled_height,
-                 scaled_width,
-                 scaled_height),
-                axis=1)
+                    (scaled_x,
+                    scaled_y,
+                    scaled_x + scaled_width,
+                    scaled_y + scaled_height,
+                    scaled_width,
+                    scaled_height),
+                    axis=1)
 
             if image_id in train_imgids:
                 train_imgids.remove(image_id)
