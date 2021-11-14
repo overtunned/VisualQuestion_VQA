@@ -81,7 +81,7 @@ def _load_dataset(dataroot, name, img_id2val):
     """
     question_path = os.path.join(
         dataroot, 'v2_OpenEnded_mscoco_%s2014_questions.json' % name)
-    questions = sorted(json.load(open(question_path))['questions'],
+    questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
     answer_path = os.path.join(dataroot, 'cache', '%s_target.pkl' % name)
     answers = cPickle.load(open(answer_path, 'rb'))

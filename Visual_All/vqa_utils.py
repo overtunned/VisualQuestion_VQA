@@ -70,7 +70,7 @@ def main_run(dataroot,pkl_filename,glove_filename,filenames_dict,image_filenames
         
 
 if __name__ == "__main__":
-
+    feat_path = '/content/drive/MyDrive/College_paper/lxmert_data/data/vg_gqa_imgfeat'
     dataroot='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset'
     pkl_file='dictionary.pkl'
     fasttext_filename="/content/drive/MyDrive/College_paper/fast-models/cc.ml.300.bin"
@@ -85,6 +85,6 @@ if __name__ == "__main__":
     
     image_filenames_dict={'train_data_file': data_path + 'hdf5/train36.hdf5','val_data_file': data_path + 'hdf5/val36.hdf5',
                             'train_ids_file': data_path + 'data/train_ids.pkl','val_ids_file': data_path + 'data/val_ids.pkl',
-                            'infile':root_folder+'/VQA/image_features/data/trainval_36/trainval_resnet101_faster_rcnn_genome_36.tsv',
+                            'infile':feat_path+'/vg_gqa_obj36.tsv',
                             'train_indices_file': data_path + 'data/train36_imgid2idx.pkl','val_indices_file': data_path + 'data/val36_imgid2idx.pkl'}
     main_run(dataroot,pkl_file,fasttext_filename,filenames_dict,image_filenames_dict)
