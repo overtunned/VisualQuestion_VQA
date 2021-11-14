@@ -88,7 +88,7 @@ def image_feats_converter(filenames):
                     scaled_width,
                     scaled_height),
                     axis=1)
-
+            flag= False
             if image_id in train_imgids:
                 train_imgids.remove(image_id)
                 train_indices[image_id] = train_counter
@@ -98,7 +98,8 @@ def image_feats_converter(filenames):
                     dtype=np.float32).reshape((item['num_boxes'], -1))
                 train_spatial_img_features[train_counter, :, :] = spatial_features
                 train_counter += 1
-            elif image_id in val_imgids:
+                flag = True
+            if image_id in val_imgids:
                 val_imgids.remove(image_id)
                 val_indices[image_id] = val_counter
                 val_img_bb[val_counter, :, :] = bboxes
@@ -107,7 +108,8 @@ def image_feats_converter(filenames):
                     dtype=np.float32).reshape((item['num_boxes'], -1))
                 val_spatial_img_features[val_counter, :, :] = spatial_features
                 val_counter += 1
-            else:
+                flag = True
+            if not flag:
                 notfound.append(image_id)
                 continue
 
