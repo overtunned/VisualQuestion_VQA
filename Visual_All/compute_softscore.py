@@ -6,7 +6,7 @@ import numpy as np
 import re
 import _pickle as cPickle
 #import cPickle
-#sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All')
 from dataset_vqa import Dictionary
 import utils
 
@@ -78,15 +78,6 @@ punct = [';', r"/", '[', ']', '"', '{', '}',
 
 
 def get_score(occurences):
-    if occurences == 0:
-        return 0
-    elif occurences == 1:
-        return 0.3
-    elif occurences == 2:
-        return 0.6
-    elif occurences == 3:
-        return 0.9
-    else:
         return 1
 
 
@@ -136,8 +127,8 @@ def filter_answers(answers_dset, min_occurence):
     occurence = {}
 
     for ans_entry in answers_dset:
-        answers = ans_entry['answers']
-        gtruth = ans_entry['multiple_choice_answer']
+        answers = ans_entry['answer']
+        gtruth = ans_entry['answer']
         gtruth = preprocess_answer(gtruth)
         if gtruth not in occurence:
             occurence[gtruth] = set()
@@ -150,8 +141,7 @@ def filter_answers(answers_dset, min_occurence):
         min_occurence, len(occurence)))
     return occurence
 
-
-def create_ans2label(occurence, name, cache_root='data/cache'):
+def create_ans2label(occurence, name, cache_root='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/cache'):
     """Note that this will also create label2ans.pkl at the same time
 
     occurence: dict {answer -> whatever}
@@ -175,7 +165,7 @@ def create_ans2label(occurence, name, cache_root='data/cache'):
     return ans2label
 
 
-def compute_target(answers_dset, ans2label, name, cache_root='data/cache'):
+def compute_target(answers_dset, ans2label, name, cache_root='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/cache'):
     """Augment answers_dset with soft score as label
 
     ***answers_dset should be preprocessed***
@@ -184,11 +174,9 @@ def compute_target(answers_dset, ans2label, name, cache_root='data/cache'):
     """
     target = []
     for ans_entry in answers_dset:
-        answers = ans_entry['answers']
+        answer = ans_entry['answer']
         answer_count = {}
-        for answer in answers:
-            answer_ = answer['answer']
-            answer_count[answer_] = answer_count.get(answer_, 0) + 1
+        answer_count[answer] = answer_count.get(answer, 0) + 1
 
         labels = []
         scores = []

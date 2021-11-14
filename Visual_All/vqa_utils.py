@@ -11,11 +11,10 @@ def create_dictionary(dataroot):
     dictionary = Dictionary()
     #questions = []
     files = [
-        'v2_OpenEnded_mscoco_train2014_questions.json',
-        'v2_OpenEnded_mscoco_val2014_questions.json',
-        'v2_OpenEnded_mscoco_test2015_questions.json',
-        'v2_OpenEnded_mscoco_test-dev2015_questions.json'
-    ]
+            '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/vgenome_train2021_questions.json',
+            '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/vgenome_val2021_questions.json',
+            '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/vgenome_test2021_questions.json'
+            ]
     for path in files:
         question_path = os.path.join(dataroot, path)
         qs = json.load(open(question_path))['questions']
@@ -23,21 +22,17 @@ def create_dictionary(dataroot):
             dictionary.tokenize(q['question'], True)
     return dictionary
 
-def create_glove_embedding_init(idx2word, glove_file):
+def create_glove_embedding_init(idx2word, ft_model_file):
     """creates the glove embedding matrix for all the words in the questions
     """
     word2emb = {}
-    with open(glove_file, 'r') as f:
-        entries = f.readlines()
-    emb_dim = len(entries[0].split(' ')) - 1
+    ft = fasttext.load_model(ft_model_file)
+    emb_dim = 300
     print('embedding dim is %d' % emb_dim)
     weights = np.zeros((len(idx2word), emb_dim), dtype=np.float32)
 
-    for entry in entries:
-        vals = entry.split(' ')
-        word = vals[0]
-        vals = list(map(float, vals[1:]))
-        word2emb[word] = np.array(vals)
+    for word in ft.get_words():
+        word2emb[word] = ft.get_word_vector(word)
     
     for idx, word in enumerate(idx2word):
         #print(idx,word)
@@ -45,6 +40,7 @@ def create_glove_embedding_init(idx2word, glove_file):
             continue
         weights[idx] = word2emb[word]
     return weights, word2emb
+
 
 def main_run(dataroot,pkl_filename,glove_filename,filenames_dict,image_filenames_dict,emb_dim=300):
 
@@ -73,31 +69,22 @@ def main_run(dataroot,pkl_filename,glove_filename,filenames_dict,image_filenames
     image_feats_converter(image_filenames_dict)
         
 
-
-
 if __name__ == "__main__":
-    user="nithin_rao"
-    if user=="nithin_rao":
-        root_folder = "/Users/nithin_rao/MyFiles/MS/USC/Spring_2019/CSCI_599_DL/Project/"
-    else:
-        root_folder = "/data/digbose92"
-        
-    dataroot=root_folder+"/VQA/questions_answers"
-    pkl_file='dictionary.pkl'
-    glove_filename=root_folder+"/VQA/glove_dataset/data/glove/glove.6B.300d.txt"
 
-    train_questions_filenames=os.path.join(dataroot,"v2_OpenEnded_mscoco_train2014_questions.json")
-    train_answer_filenames=os.path.join(dataroot,"v2_mscoco_train2014_annotations.json")
-    val_questions_filenames=os.path.join(dataroot,"v2_OpenEnded_mscoco_val2014_questions.json")
-    val_answer_filenames=os.path.join(dataroot,"v2_mscoco_val2014_annotations.json")
+    dataroot='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset'
+    pkl_file='dictionary.pkl'
+    fasttext_filename="/content/drive/MyDrive/College_paper/fast-models/cc.ml.300.bin"
+    data_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/'
+
+    train_questions_filenames=os.path.join(dataroot,"vgenome_train2021_questions.json")
+    train_answer_filenames=os.path.join(dataroot,"vgenome_train2021_answers.json")
+    val_questions_filenames=os.path.join(dataroot,"vgenome_val2021_questions.json")
+    val_answer_filenames=os.path.join(dataroot,"vgenome_val2021_answers.json")
     filenames_dict={'train_question_file':train_questions_filenames,'train_answer_file':train_answer_filenames,
                     'validation_question_file':val_questions_filenames,'validation_answer_file':val_answer_filenames}
     
-    image_filenames_dict={'train_data_file':'data/train36.hdf5','val_data_file':'data/val36.hdf5',
-                            'train_ids_file':'data/train_ids.pkl','val_ids_file':'data/val_ids.pkl',
+    image_filenames_dict={'train_data_file': data_path + 'hdf5/train36.hdf5','val_data_file': data_path + 'hdf5/val36.hdf5',
+                            'train_ids_file': data_path + 'data/train_ids.pkl','val_ids_file': data_path + 'data/val_ids.pkl',
                             'infile':root_folder+'/VQA/image_features/data/trainval_36/trainval_resnet101_faster_rcnn_genome_36.tsv',
-                            'train_indices_file':'data/train36_imgid2idx.pkl','val_indices_file':'data/val36_imgid2idx.pkl'}
-    main_run(dataroot,pkl_file,glove_filename,filenames_dict,image_filenames_dict)
-
-    
-
+                            'train_indices_file': data_path + 'data/train36_imgid2idx.pkl','val_indices_file': data_path + 'data/val36_imgid2idx.pkl'}
+    main_run(dataroot,pkl_file,fasttext_filename,filenames_dict,image_filenames_dict)
