@@ -34,7 +34,7 @@ def _create_entry(question, answer):
 def _load_dataset(dataroot,name):
     question_path = os.path.join(
         dataroot, 'v2_OpenEnded_mscoco_%s2014_yes_no_questions.json' % name)
-    questions = sorted(json.load(open(question_path))['questions'],
+    questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
     answer_path = os.path.join(dataroot, '%s_target_yes_no_ans.pkl' % name)
     answers = cPickle.load(open(answer_path, 'rb'))

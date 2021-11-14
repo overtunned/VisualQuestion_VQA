@@ -85,7 +85,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Image Feature extraction script')
-    parser.add_argument('--dir_data', default='/data/digbose92/VQA/COCO/',
+    parser.add_argument('--dir_data', default='/content/drive/MyDrive/College_paper/Dataset',
                     help='dir where the COCO images are kept')
     parser.add_argument('--choice', default='train', type=str,
                     help='Data split to consider')

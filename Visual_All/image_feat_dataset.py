@@ -21,7 +21,7 @@ class ImageFeatDataset(Dataset):
     """Pytorch Dataset which returns a tuple of image, question tokens and the answer label
     """
     def __init__(self,root_dir,choice='train',transform_list=None):
-        self.img_dir=os.path.join(root_dir,choice+"2014")
+        self.img_dir=os.path.join(root_dir,"VG_100K")
         self.choice=choice
         self.entries=os.listdir(self.img_dir)
         self.transform=transform_list

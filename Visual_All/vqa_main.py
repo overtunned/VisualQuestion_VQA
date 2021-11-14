@@ -15,7 +15,7 @@ from torch.autograd import Variable
 import pdb
 
 def question_parse(token_list):
-    data=pickle.load(open('data/dictionary.pkl','rb'))
+    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/dictionary.pkl','rb'))
     index2word_map=data[1]
     word_list=[]
 
@@ -53,7 +53,7 @@ def main(args):
 
     # CUDA for PyTorch
     #if cuda:
-    device=3
+    device=0
     torch.cuda.set_device(device)
 
     #device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
@@ -75,7 +75,7 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file('data/dictionary.pkl')
+    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/dictionary.pkl')
     train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
     # eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
@@ -169,10 +169,10 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--num_hid', type=int, default=512)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
-    parser.add_argument('--img_root_dir', type=str, default="/data/digbose92/VQA/COCO", help='location of the COCO images')
+    parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
     parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data", help='location of the associated data')
     #parser.add_argument('--model', type=str, default='baseline0_newatt')
-    parser.add_argument('--file_name', type=str, default="data/glove6b_init_300d.npy")
+    parser.add_argument('--file_name', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/ft_init_300d.npy")
     parser.add_argument('--output', type=str, default='saved_models')
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--max_sequence_length', type=int, default=14)
