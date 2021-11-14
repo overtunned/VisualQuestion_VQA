@@ -4,6 +4,7 @@ import numpy as np
 from dataset_vqa import Dictionary 
 from compute_softscore import *
 from image_feature_extractor import * 
+import fasttext
 
 def create_dictionary(dataroot):
     """Creates a dictionary object for future usage
