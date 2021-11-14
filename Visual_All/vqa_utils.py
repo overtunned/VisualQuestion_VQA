@@ -46,11 +46,11 @@ def create_glove_embedding_init(idx2word, ft_model_file):
 def main_run(dataroot,pkl_filename,glove_filename,filenames_dict,image_filenames_dict,emb_dim=300):
 
     dictionary=create_dictionary(dataroot)
-    dictionary.dump_to_file(os.path.join('data',pkl_filename))
-    d = Dictionary.load_from_file((os.path.join('data',pkl_filename)))
+    dictionary.dump_to_file(os.path.join('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data',pkl_filename))
+    d = Dictionary.load_from_file((os.path.join('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data',pkl_filename)))
     print(d.idx2word)
     weights, word2emb = create_glove_embedding_init(d.idx2word, glove_filename)
-    np.save('data/glove6b_init_%dd.npy' % emb_dim, weights)
+    np.save('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/glove6b_init_%dd.npy' % emb_dim, weights)
 
     #extract the raw data from json
     train_questions = json.load(open(filenames_dict['train_question_file']))['questions']

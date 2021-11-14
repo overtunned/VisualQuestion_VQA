@@ -20,7 +20,7 @@ def question_parse(token_list):
     word_list=[]
 
     for idval in token_list.tolist():
-        if(idval==19901):
+        if(idval==2000000):
             word_list.append(index2word_map[idval-1])
         else:
             word_list.append(index2word_map[idval])
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_hid', type=int, default=512)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/data/digbose92/VQA/COCO", help='location of the COCO images')
-    parser.add_argument('--data_root_dir', type=str, default="/proj/digbose92/VQA/VisualQuestion_VQA/Visual_All/data", help='location of the associated data')
+    parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data", help='location of the associated data')
     #parser.add_argument('--model', type=str, default='baseline0_newatt')
     parser.add_argument('--file_name', type=str, default="data/glove6b_init_300d.npy")
     parser.add_argument('--output', type=str, default='saved_models')
