@@ -17,7 +17,7 @@ def create_dictionary(dataroot):
             ]
     for path in files:
         question_path = os.path.join(dataroot, path)
-        qs = json.load(open(question_path))['questions']
+        qs = json.load(open(question_path))
         for q in qs:
             dictionary.tokenize(q['question'], True)
     return dictionary
