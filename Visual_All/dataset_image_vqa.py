@@ -142,7 +142,8 @@ class VQADataset(Dataset):
         image_id=entry['image_id']
         
         
-        filename='COCO_'+self.choice+'2014_'+str(image_id).zfill(self.filename_len)+'.jpg'
+        filename=str(image_id)+'.jpg'
+        # filename='COCO_'+self.choice+'2014_'+str(image_id).zfill(self.filename_len)+'.jpg'
 
         if(len(filename)>0):
             #print(filename[0])
