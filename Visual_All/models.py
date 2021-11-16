@@ -47,7 +47,7 @@ def create_embedding_layer(weights_matrix,non_trainable=False):
         return features
 '''
 
-class EncoderCNN_VGG16(nn.Module):
+class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(EncoderCNN_VGG16, self).__init__()

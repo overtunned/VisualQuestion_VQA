@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 import pickle
 from dataset_vqa import Dictionary, VQAFeatureDataset
-from models import EncoderLSTM, FusionModule, EncoderCNN_VGG16
+from models import EncoderLSTM, FusionModule, EncoderCNN
 from dataset_image_vqa import VQADataset
 import torchvision.transforms as transforms
 from tqdm import tqdm
