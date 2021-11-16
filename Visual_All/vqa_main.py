@@ -15,7 +15,7 @@ from torch.autograd import Variable
 import pdb
 
 def question_parse(token_list):
-    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/dictionary.pkl','rb'))
+    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl','rb'))
     index2word_map=data[1]
     word_list=[]
 
@@ -75,9 +75,9 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/dictionary.pkl')
+    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl')
     train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
-    # eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
+    eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
 
     #model definition 
@@ -92,7 +92,7 @@ def main(args):
 
     #Dataloader initialization
     train_loader = DataLoader(train_dataset, args.batch_size, shuffle=True, num_workers=12)
-    # eval_loader =  DataLoader(eval_dataset, args.batch_size, shuffle=True, num_workers=1)
+    eval_loader =  DataLoader(eval_dataset, args.batch_size, shuffle=True, num_workers=1)
 
     # Loss and optimizer
     criterion = nn.NLLLoss()
@@ -106,11 +106,11 @@ def main(args):
     #Training starts
     #print('Training Starting ......................')
 
-    def evaluate_val(model,train_loader,criterion,device):
+    def evaluate_val(model,loader,criterion,device):
         loss=0
         accuracy=0
         with torch.no_grad():
-            for image_sample,question_token,labels in iter(train_loader):
+            for image_sample,question_token,labels in iter(loader):
                 image_sample,question_token,labels = image_sample.to(device),question_token.to(device),labels.to(device)
                 output=model.forward(question_token,image_sample)
                 loss+= criterion(output,labels).item()
@@ -155,7 +155,7 @@ def main(args):
         print(epoch_loss)
         #loss_save.append(val_loss)
         
-        val_loss,accuracy = evaluate_val(fusion_network,train_loader,criterion,device)
+        val_loss,accuracy = evaluate_val(fusion_network,eval_loader,criterion,device)
         string='Epoch {}:{} loss: {} \t'.format(epoch,args.epochs,running_loss)
         string+='Accuracy : '.format(accuracy)
         file_train.write(string)

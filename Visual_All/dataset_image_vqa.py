@@ -38,7 +38,7 @@ def _load_dataset(dataroot, name, img_id2val):
         dataroot, 'vgenome_%s2021_questions.json' % name)
     questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
-    answer_path = os.path.join(dataroot, 'cache', '%s_target_yes_no.pkl' % name)
+    answer_path = os.path.join(dataroot, 'cache', '%s_target.pkl' % name)
     answers = cPickle.load(open(answer_path, 'rb'))
     answers = sorted(answers, key=lambda x: x['question_id'])
     try:
