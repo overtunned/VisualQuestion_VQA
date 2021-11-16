@@ -91,7 +91,7 @@ class VQADataset(Dataset):
         #initializations
         self.img_root=image_root_dir
         self.data_root=dataroot
-        self.img_dir=os.path.join(image_root_dir,'VG_100k')
+        self.img_dir=os.path.join(image_root_dir,'VG_100K')
         #print(os.path.exists(self.img_dir))
         self.choice=choice
         self.transform=transform_set
