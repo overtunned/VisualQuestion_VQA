@@ -13,6 +13,7 @@ import torchvision.transforms as transforms
 from tqdm import tqdm
 from torch.autograd import Variable
 import pdb
+import os
 
 def question_parse(token_list):
     data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl','rb'))
@@ -75,7 +76,7 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file(args.data_root_dir +'/dictionary.pkl')
+    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl')
     train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
     eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
@@ -91,8 +92,8 @@ def main(args):
     
 
     #Dataloader initialization
-    train_loader = DataLoader(train_dataset, args.batch_size, shuffle=True, num_workers=12)
-    eval_loader =  DataLoader(eval_dataset, args.batch_size, shuffle=True, num_workers=1)
+    train_loader = DataLoader(train_dataset, args.batch_size, shuffle=True, num_workers=4)
+    eval_loader =  DataLoader(eval_dataset, args.batch_size, shuffle=True, num_workers=2)
 
     # Loss and optimizer
     criterion = nn.NLLLoss()
@@ -104,13 +105,23 @@ def main(args):
     total_step = len(train_loader)
     step=0
     #Training starts
-    #print('Training Starting ......................')
+    print('Training Starting ......................')
+    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model.pt"
+    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/'
+    if os.path.exists(PATH):
+      checkpoint = torch.load(PATH)
+      fusion_network.load_state_dict(checkpoint['model_state_dict'])
+      optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+      args.epochs = checkpoint['epoch']
+      loss = checkpoint['loss']
+
 
     def evaluate_val(model,loader,criterion,device):
         loss=0
         accuracy=0
+        print('Evaluation started')
         with torch.no_grad():
-            for image_sample,question_token,labels in iter(loader):
+            for image_sample,question_token,labels in tqdm(loader):
                 image_sample,question_token,labels = image_sample.to(device),question_token.to(device),labels.to(device)
                 output=model.forward(question_token,image_sample)
                 loss+= criterion(output,labels).item()
@@ -119,7 +130,7 @@ def main(args):
                 accuracy+=equality.type(torch.FloatTensor).mean()
         return loss,accuracy
 
-    file_train=open('train_loss_log.txt','a+')
+    file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/train_loss_log.txt','a+')
     loss_save=[]
 
     for epoch in range(args.epochs):
@@ -153,20 +164,29 @@ def main(args):
         epoch_loss = running_loss / len(train_dataset)
         epoch_acc = running_corrects.double() / len(train_dataset)
         print(epoch_loss)
-        #loss_save.append(val_loss)
+        # loss_save.append(val_loss)
         
         val_loss,accuracy = evaluate_val(fusion_network,eval_loader,criterion,device)
         string='Epoch {}:{} loss: {} \t'.format(epoch,args.epochs,running_loss)
         string+='Accuracy : '.format(accuracy)
         file_train.write(string)
         print('{} Loss: {:.4f} Acc: {:.4f}'.format('train', epoch_loss, epoch_acc))
+        torch.save({
+                    'epoch': epoch,
+                    'model_state_dict': fusion_network.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                    'loss': epoch_loss,
+                    }, PATH)
+        save_path = model_path+'/vgg_ft{}.pth'.format(epoch)
+        torch.save(fusion_network, save_path)
+        print("Model and checkpoint saved")
     file_train.close()
 
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epochs', type=int, default=100)
+    parser.add_argument('--epochs', type=int, default=1)
     parser.add_argument('--num_hid', type=int, default=512)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
@@ -180,11 +200,10 @@ if __name__ == "__main__":
     parser.add_argument('--q_embed',type=int, default=1024, help='embedding output of the encoder RNN')
     parser.add_argument('--img_feats',type=int, default=1024, help='input feature size of the image space')
     parser.add_argument('--fuse_embed',type=int, default=1000, help='Overall embedding size of the fused network')
-    parser.add_argument('--num_class',type=int, default=2, help='Number of output classes')
+    parser.add_argument('--num_class',type=int, default=3344, help='Number of output classes')
     parser.add_argument('--learning_rate',type=float,default=0.001,help='Learning rate')
     args = parser.parse_args()
     main(args)
-
 
 
 
