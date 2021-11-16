@@ -23,7 +23,7 @@ def create_dictionary(dataroot):
             dictionary.tokenize(q['question'], True)
     return dictionary
 
-def create_glove_embedding_init(idx2word, ft_model_file):
+def create_ft_embedding_init(idx2word, ft_model_file):
     """creates the glove embedding matrix for all the words in the questions
     """
     word2emb = {}
@@ -49,7 +49,7 @@ def main_run(dataroot,pkl_filename,ft_filename,filenames_dict,image_filenames_di
     dictionary.dump_to_file(os.path.join('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data',pkl_filename))
     d = Dictionary.load_from_file((os.path.join('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data',pkl_filename)))
     print(d.idx2word)
-    weights, word2emb = create_glove_embedding_init(d.idx2word, ft_filename)
+    weights, word2emb = create_ft_embedding_init(d.idx2word, ft_filename)
     np.save('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All/data/ft_init_%dd.npy' % emb_dim, weights)
 
     #extract the raw data from json
