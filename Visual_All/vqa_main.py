@@ -107,13 +107,15 @@ def main(args):
     #Training starts
     print('Training Starting ......................')
     PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model.pt"
-    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/'
-    if os.path.exists(PATH):
-      checkpoint = torch.load(PATH)
-      fusion_network.load_state_dict(checkpoint['model_state_dict'])
-      optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-      args.epochs = checkpoint['epoch']
-      loss = checkpoint['loss']
+    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models'
+    # if os.path.exists(PATH):
+    #   checkpoint = torch.load(PATH)
+    #   fusion_network.load_state_dict(checkpoint['model_state_dict'])
+    #   optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    #   args.epochs = checkpoint['epoch']
+    #   loss = checkpoint['loss']
+
+    fusion_network = torch.load('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/vgg_ft19.pth')
 
 
     def evaluate_val(model,loader,criterion,device):
@@ -177,9 +179,11 @@ def main(args):
                     'optimizer_state_dict': optimizer.state_dict(),
                     'loss': epoch_loss,
                     }, PATH)
-        save_path = model_path+'/vgg_ft{}.pth'.format(epoch)
-        torch.save(fusion_network, save_path)
-        print("Model and checkpoint saved")
+        if epoch +1% 5 ==0:
+          save_path = model_path+'/vgg_ft{}.pth'.format(epoch)
+          torch.save(fusion_network, save_path)
+          print ("model saved")
+        print("checkpoint saved")
     file_train.close()
 
 

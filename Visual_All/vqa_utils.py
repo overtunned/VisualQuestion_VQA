@@ -12,9 +12,9 @@ def create_dictionary(dataroot):
     dictionary = Dictionary()
     #questions = []
     files = [
-            '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/vgenome_train2021_questions.json',
-            '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/vgenome_val2021_questions.json',
-            '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/vgenome_test2021_questions.json'
+             dataroot+ '/vgenome_train2021_questions.json',
+             dataroot+ '/vgenome_val2021_questions.json',
+             dataroot+ '/vgenome_test2021_questions.json'
             ]
     for path in files:
         question_path = os.path.join(dataroot, path)
@@ -60,7 +60,7 @@ def main_run(dataroot,pkl_filename,ft_filename,filenames_dict,image_filenames_di
     
     #generate the question labels and the id maps 
     answers = train_answers + validation_answers
-    occurence = filter_answers(answers, 9)
+    occurence = filter_answers(answers, 30)
     ans2label = create_ans2label(occurence, 'trainval')
     train_target=compute_target(train_answers, ans2label, 'train')
     validation_target=compute_target(validation_answers, ans2label, 'val')
@@ -72,7 +72,7 @@ def main_run(dataroot,pkl_filename,ft_filename,filenames_dict,image_filenames_di
 
 if __name__ == "__main__":
     feat_path = '/content/drive/MyDrive/College_paper/lxmert_data/data/vg_gqa_imgfeat'
-    dataroot='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset'
+    dataroot='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data'
     pkl_file='dictionary.pkl'
     fasttext_filename="/content/drive/MyDrive/College_paper/fast-models/cc.ml.300.bin"
     data_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/'

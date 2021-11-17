@@ -33,7 +33,7 @@ def _create_entry(question, answer):
     return entry
 def _load_dataset(dataroot,name):
     question_path = os.path.join(
-        dataroot, 'v2_OpenEnded_mscoco_%s2014_yes_no_questions.json' % name)
+        dataroot, 'v2_OpenEnded_mscoco_%s2021questions.json' % name)
     questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
     answer_path = os.path.join(dataroot, '%s_target_yes_no_ans.pkl' % name)

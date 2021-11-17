@@ -115,7 +115,7 @@ def parse_args():
 if __name__ == '__main__':
     
     image_root_dir="/data/digbose92/VQA/COCO"
-    dictionary=Dictionary.load_from_file('../Visual_All/data/dictionary.pkl')
+    dictionary=Dictionary.load_from_file('../data/dictionary.pkl')
     feats_data_path="/data/digbose92/VQA/COCO/train_hdf5_COCO/"
     data_root="/proj/digbose92/VQA/VisualQuestion_VQA/common_resources"
     npy_file="../../VisualQuestion_VQA/Visual_All/data/glove6b_init_300d.npy"
@@ -252,9 +252,3 @@ if __name__ == '__main__':
             model_path = os.path.join(output_folder, 'model.pth')
             torch.save(model.state_dict(), model_path)
             best_eval_score = eval_score
-    
-        
-
-
-    
-
