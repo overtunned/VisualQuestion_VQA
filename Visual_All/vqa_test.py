@@ -63,51 +63,51 @@ def main(args):
     
     #defining dictionary and VQAFeatureDataset
     #transforms for pretrained network(transform for resnet now)
-    train_transform = transforms.Compose([ 
+    test_transform = transforms.Compose([ 
         transforms.Resize((args.crop_size,args.crop_size)),
         transforms.ToTensor(), 
         transforms.Normalize((0.485, 0.456, 0.406), 
                              (0.229, 0.224, 0.225))])
 
-    validate_transform=transforms.Compose([ 
-        transforms.Resize((args.crop_size,args.crop_size)),
-        transforms.ToTensor(), 
-        transforms.Normalize((0.485, 0.456, 0.406), 
-                             (0.229, 0.224, 0.225))])
+    # validate_transform=transforms.Compose([ 
+    #     transforms.Resize((args.crop_size,args.crop_size)),
+    #     transforms.ToTensor(), 
+    #     transforms.Normalize((0.485, 0.456, 0.406), 
+    #                          (0.229, 0.224, 0.225))])
 
     
     dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl')
-    train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
-    eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
+    test_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='test',transform_set=test_transform)
+    # eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
 
-    #model definition 
-    print('Loading the models')
-    image_encoder=EncoderCNN(embed_size=args.img_feats).to(device)
-    question_encoder=EncoderLSTM(hidden_size=args.num_hid,weights_matrix=weights,fc_size=args.q_embed,max_seq_length=args.max_sequence_length,batch_size=args.batch_size).to(device)
-    fusion_network=FusionModule(qnetwork=question_encoder,img_network=image_encoder,fuse_embed_size=args.fuse_embed,input_fc_size=args.img_feats,class_size=args.num_class).to(device)
-    #print(list(fusion_network.parameters()))
-    print(fusion_network)
-    #input()
+    # #model definition 
+    # print('Loading the models')
+    # image_encoder=EncoderCNN(embed_size=args.img_feats).to(device)
+    # question_encoder=EncoderLSTM(hidden_size=args.num_hid,weights_matrix=weights,fc_size=args.q_embed,max_seq_length=args.max_sequence_length,batch_size=args.batch_size).to(device)
+    # fusion_network=FusionModule(qnetwork=question_encoder,img_network=image_encoder,fuse_embed_size=args.fuse_embed,input_fc_size=args.img_feats,class_size=args.num_class).to(device)
+    # #print(list(fusion_network.parameters()))
+    # print(fusion_network)
+    # #input()
     
 
     #Dataloader initialization
-    train_loader = DataLoader(train_dataset, args.batch_size, shuffle=True, num_workers=4)
-    eval_loader =  DataLoader(eval_dataset, args.batch_size, shuffle=True, num_workers=2)
+    test_loader = DataLoader(test_dataset, args.batch_size, shuffle=True, num_workers=4)
+    # eval_loader =  DataLoader(eval_dataset, args.batch_size, shuffle=True, num_workers=2)
 
-    # Loss and optimizer
-    criterion = nn.NLLLoss()
-    #params=lis
-    #params = list(image_encoder.linear.parameters())+list(image_encoder.bn.parameters())+list(question_encoder.parameters()) + list(fusion_network.parameters()) 
-    optimizer = torch.optim.Adam(fusion_network.parameters(), lr=args.learning_rate)
+    # # Loss and optimizer
+    # criterion = nn.NLLLoss()
+    # #params=lis
+    # #params = list(image_encoder.linear.parameters())+list(image_encoder.bn.parameters())+list(question_encoder.parameters()) + list(fusion_network.parameters()) 
+    # optimizer = torch.optim.Adam(fusion_network.parameters(), lr=args.learning_rate)
 
-    # Train the models
-    total_step = len(train_loader)
-    step=0
-    #Training starts
-    print('Training Starting ......................')
-    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model.pt"
-    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models'
+    # # Train the models
+    # total_step = len(train_loader)
+    # step=0
+    # #Training starts
+    # print('Training Starting ......................')
+    # PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model.pt"
+    # model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models'
     # if os.path.exists(PATH):
     #   checkpoint = torch.load(PATH)
     #   fusion_network.load_state_dict(checkpoint['model_state_dict'])
@@ -130,7 +130,6 @@ def main(args):
                 ps = torch.exp(output)
                 equality= (labels.data == ps.max(dim=1)[1])
                 accuracy+=equality.type(torch.FloatTensor).mean()
-
         return loss,accuracy
 
     file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/train_loss_log.txt','a+')
@@ -192,7 +191,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', type=int, default=20)
-    parser.add_argument('--num_hid', type=int, default=1024)
+    parser.add_argument('--num_hid', type=int, default=512)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
     parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data", help='location of the associated data')
@@ -202,11 +201,11 @@ if __name__ == "__main__":
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--max_sequence_length', type=int, default=14)
     parser.add_argument('--seed', type=int, default=1111, help='random seed')
-    parser.add_argument('--q_embed',type=int, default=2048, help='embedding output of the encoder RNN')
-    parser.add_argument('--img_feats',type=int, default=2048, help='input feature size of the image space')
-    parser.add_argument('--fuse_embed',type=int, default=2048, help='Overall embedding size of the fused network')
+    parser.add_argument('--q_embed',type=int, default=1024, help='embedding output of the encoder RNN')
+    parser.add_argument('--img_feats',type=int, default=1024, help='input feature size of the image space')
+    parser.add_argument('--fuse_embed',type=int, default=1000, help='Overall embedding size of the fused network')
     parser.add_argument('--num_class',type=int, default=3344, help='Number of output classes')
-    parser.add_argument('--learning_rate',type=float,default=0.0001,help='Learning rate')
+    parser.add_argument('--learning_rate',type=float,default=0.001,help='Learning rate')
     args = parser.parse_args()
     main(args)
 

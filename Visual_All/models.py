@@ -46,7 +46,7 @@ def create_embedding_layer(weights_matrix,non_trainable=False):
         #features = self.bn(self.linear(features))
         return features
 '''
-
+resnet, inceptionv3, exception, mobilenet, shufflenet, vgg16
 class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
         """Load the pretrained ResNet-152 and replace top fc layer."""
@@ -54,7 +54,7 @@ class EncoderCNN(nn.Module):
         vgg16 = models.vgg16(pretrained=True)
         modules = list(vgg16.children())[:-1]      # delete the last fc layer.
         self.resnet = nn.Sequential(*modules)
-        self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
+        self.linear = nn.Linear(resnet[-1][0].in_features, embed_size)
         for param in self.resnet.parameters():
             param.requires_grad = False
         #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)

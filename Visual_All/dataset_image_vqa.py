@@ -135,10 +135,10 @@ class VQADataset(Dataset):
         answer_data=entry['answer']
         max_id=answer_data['scores'].index(max(answer_data['scores'])) #finding the maximum score index
         label=int(answer_data['labels'][max_id])
-        if(label==3):
-            label=0
-        elif(label==9):
-            label=1
+        # if(label==3):
+        #     label=0
+        # elif(label==9):
+        #     label=1
         image_id=entry['image_id']
         
         
