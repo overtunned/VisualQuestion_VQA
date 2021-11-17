@@ -22,7 +22,7 @@ def create_embedding_layer(weights_matrix,non_trainable=False):
     return emb_layer, num_embeddings, embedding_dim
 
 
-'''class EncoderCNN(nn.Module):
+class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(EncoderCNN, self).__init__()
@@ -45,31 +45,31 @@ def create_embedding_layer(weights_matrix,non_trainable=False):
         #features=F.relu(features)
         #features = self.bn(self.linear(features))
         return features
-'''
+
 # resnet, inceptionv3, exception, mobilenet, shufflenet, vgg16, densenet, squeezenet, alexnet
-class EncoderCNN(nn.Module):
-    def __init__(self, embed_size):
-        """Load the pretrained ResNet-152 and replace top fc layer."""
-        super(EncoderCNN, self).__init__()
-        vgg16 = models.vgg16(pretrained=True)
-        modules = list(vgg16.children())[:-1]      # delete the last fc layer.
-        self.resnet = nn.Sequential(*modules)
-        self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
-        for param in self.resnet.parameters():
-            param.requires_grad = False
-        #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
+# class EncoderCNN(nn.Module):
+#     def __init__(self, embed_size):
+#         """Load the pretrained ResNet-152 and replace top fc layer."""
+#         super(EncoderCNN, self).__init__()
+#         vgg16 = models.vgg16(pretrained=True)
+#         modules = list(vgg16.children())[:-1]      # delete the last fc layer.
+#         self.resnet = nn.Sequential(*modules)
+#         self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
+#         for param in self.resnet.parameters():
+#             param.requires_grad = False
+#         #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         
-    def forward(self, images):
-        """Extract feature vectors from input images."""
-        #with torch.no_grad():
-        #    features = self.resnet(images)
-        features = self.resnet(images)
-        features = features.reshape(features.size(0), -1)
-        features=self.linear(features)
-        features=torch.tanh(features)
-        #features=F.relu(features)
-        #features = self.bn(self.linear(features))
-        return features
+#     def forward(self, images):
+#         """Extract feature vectors from input images."""
+#         #with torch.no_grad():
+#         #    features = self.resnet(images)
+#         features = self.resnet(images)
+#         features = features.reshape(features.size(0), -1)
+#         features=self.linear(features)
+#         features=torch.tanh(features)
+#         #features=F.relu(features)
+#         #features = self.bn(self.linear(features))
+#         return features
 
 
 
