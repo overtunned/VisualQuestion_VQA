@@ -106,16 +106,19 @@ def main(args):
     step=0
     #Training starts
     print('Training Starting ......................')
-    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model.pt"
+    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_2187cls.pt"
     model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models'
-    # if os.path.exists(PATH):
-    #   checkpoint = torch.load(PATH)
-    #   fusion_network.load_state_dict(checkpoint['model_state_dict'])
-    #   optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    #   args.epochs = checkpoint['epoch']
-    #   loss = checkpoint['loss']
+    if os.path.exists(PATH):
+      checkpoint = torch.load(PATH)
+      fusion_network.load_state_dict(checkpoint['model_state_dict'])
+      optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+      epochs = checkpoint['epoch']
+      loss = checkpoint['loss']
+      print('saved model loaded at', epochs )
+    else:
+      epochs = 0 
 
-    # fusion_network = torch.load('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/vgg_ft19.pth')
+    # fusion_network = torch.load('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models/vgg_ft202187classes.pth')
 
 
     def evaluate_val(model,loader,criterion,device):
@@ -136,8 +139,7 @@ def main(args):
     file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/train_loss_log_vgg.txt','a+')
     loss_save=[]
 
-    for epoch in range(args.epochs):
-
+    for epoch in range(epoches, args.epochs):
         running_loss = 0.0
         running_corrects = 0
         step=0
@@ -181,7 +183,7 @@ def main(args):
                     'loss': epoch_loss,
                     }, PATH)
         if (epoch +1)% 5 ==0:
-          save_path = model_path+'/vgg_ft{}.pth'.format(epoch+1)
+          save_path = model_path+'/vgg_ft{}_2187.pth'.format(epoch+20)
           torch.save(fusion_network, save_path)
           print ("model saved")
         print("checkpoint saved")
@@ -205,7 +207,7 @@ if __name__ == "__main__":
     parser.add_argument('--q_embed',type=int, default=2048, help='embedding output of the encoder RNN')
     parser.add_argument('--img_feats',type=int, default=2048, help='input feature size of the image space')
     parser.add_argument('--fuse_embed',type=int, default=2048, help='Overall embedding size of the fused network')
-    parser.add_argument('--num_class',type=int, default=3344, help='Number of output classes')
+    parser.add_argument('--num_class',type=int, default=2187, help='Number of output classes')
     parser.add_argument('--learning_rate',type=float,default=0.0001,help='Learning rate')
     args = parser.parse_args()
     main(args)
