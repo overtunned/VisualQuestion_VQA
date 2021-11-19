@@ -138,6 +138,7 @@ def main(args):
 
     file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/train_loss_log_vgg.txt','a+')
     loss_save=[]
+    print('Resuming from', epochs)
 
     for epoch in range(epoches, args.epochs):
         running_loss = 0.0
