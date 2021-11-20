@@ -67,7 +67,7 @@ def main_run(dataroot,pkl_filename,ft_filename,filenames_dict,image_filenames_di
 
 
     #image feature extraction here based on functions in image_feature_extractor
-    # image_feats_converter(image_filenames_dict)
+    image_feats_converter(image_filenames_dict)
         
 
 if __name__ == "__main__":

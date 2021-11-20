@@ -15,31 +15,6 @@ from torch.autograd import Variable
 import pdb
 import os
 
-def question_parse(token_list):
-    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl','rb'))
-    index2word_map=data[1]
-    word_list=[]
-
-    for idval in token_list.tolist():
-        if(idval==56478):
-            word_list.append(index2word_map[idval-1])
-        else:
-            word_list.append(index2word_map[idval])
-    #word_list=[index2word_map[id] for id in token_list.tolist()]
-    print(word_list)
-
-def preproc_question_tokens(question_array):
-
-    num_questions,seq_length=question_array.shape
-    for i in np.arange(num_questions):
-        index=np.where(question_array==56478)
-        question_array[index]=56477
-    return(question_array)
-
-def convert_one_hot2int(one_hot):
-    one_hot=one_hot.astype(int)
-    class_ind=np.argmax(one_hot,axis=1)
-    return(class_ind)
 
 def main(args):
 
@@ -76,7 +51,7 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl')
+    dictionary = Dictionary.load_from_file(args.data_root_dir+'/dictionary.pkl')
     train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
     eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
@@ -107,7 +82,7 @@ def main(args):
     #Training starts
     print('Training Starting ......................')
     PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_res.pt"
-    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/models'
+    model_path = args.data_root_dir + '/models'
     if os.path.exists(PATH):
       checkpoint = torch.load(PATH)
       fusion_network.load_state_dict(checkpoint['model_state_dict'])
@@ -138,7 +113,7 @@ def main(args):
 
         return loss,accuracy
 
-    file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/train_loss_log_res.txt','a+')
+    file_train=open(args.data_root_dir + '/train_loss_log_res.txt','a+')
     loss_save=[]
     print('Resuming from', epochs)
 
