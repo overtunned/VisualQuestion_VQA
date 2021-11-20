@@ -16,7 +16,7 @@ import pdb
 import os
 
 def question_parse(token_list):
-    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl','rb'))
+    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl','rb'))
     index2word_map=data[1]
     word_list=[]
 
@@ -76,7 +76,7 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl')
+    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl')
     train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
     eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
@@ -107,7 +107,7 @@ def main(args):
     #Training starts
     print('Training Starting ......................')
     PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_res.pt"
-    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models'
+    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/models'
     if os.path.exists(PATH):
       checkpoint = torch.load(PATH)
       fusion_network.load_state_dict(checkpoint['model_state_dict'])
@@ -134,10 +134,11 @@ def main(args):
                 ps = torch.exp(output)
                 equality= (labels.data == ps.max(dim=1)[1])
                 accuracy+=equality.type(torch.FloatTensor).mean()
+        print('eval acc', accuracy)
 
         return loss,accuracy
 
-    file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/train_loss_log_res.txt','a+')
+    file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/train_loss_log_res.txt','a+')
     loss_save=[]
     print('Resuming from', epochs)
 
@@ -200,16 +201,16 @@ if __name__ == "__main__":
     parser.add_argument('--num_hid', type=int, default=512)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
-    parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data", help='location of the associated data')
+    parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1", help='location of the associated data')
     #parser.add_argument('--model', type=str, default='baseline0_newatt')
-    parser.add_argument('--file_name', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/ft_init_300d.npy")
+    parser.add_argument('--file_name', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/ft_init_300d.npy")
     parser.add_argument('--output', type=str, default='saved_models')
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--max_sequence_length', type=int, default=14)
     parser.add_argument('--seed', type=int, default=1111, help='random seed')
-    parser.add_argument('--q_embed',type=int, default=1024, help='embedding output of the encoder RNN')
-    parser.add_argument('--img_feats',type=int, default=1024, help='input feature size of the image space')
-    parser.add_argument('--fuse_embed',type=int, default=1024, help='Overall embedding size of the fused network')
+    parser.add_argument('--q_embed',type=int, default=2048, help='embedding output of the encoder RNN')
+    parser.add_argument('--img_feats',type=int, default=2048, help='input feature size of the image space')
+    parser.add_argument('--fuse_embed',type=int, default=2048, help='Overall embedding size of the fused network')
     parser.add_argument('--num_class',type=int, default=3344, help='Number of output classes')
     parser.add_argument('--learning_rate',type=float,default=0.0001,help='Learning rate')
     args = parser.parse_args()
