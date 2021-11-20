@@ -140,7 +140,7 @@ def main(args):
     loss_save=[]
     print('Resuming from', epochs)
 
-    for epoch in range(epoches, args.epochs):
+    for epoch in range(epochs, args.epochs):
         running_loss = 0.0
         running_corrects = 0
         step=0
