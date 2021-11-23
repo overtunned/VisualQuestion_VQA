@@ -14,7 +14,7 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import pdb
 import os
-
+from torch.utils.tensorboard import SummaryWriter
 
 def main(args):
     writer = SummaryWriter()
