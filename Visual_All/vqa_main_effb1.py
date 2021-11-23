@@ -81,7 +81,7 @@ def main(args):
     step=0
     #Training starts
     print('Training Starting ......................')
-    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_res.pt"
+    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_effb1.pt"
     model_path = args.data_root_dir + '/models'
     if os.path.exists(PATH):
       checkpoint = torch.load(PATH)
