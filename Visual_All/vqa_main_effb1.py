@@ -14,10 +14,11 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import pdb
 import os
+from torch.utils.tensorboard import SummaryWriter
 
 
 def main(args):
-
+    writer = SummaryWriter()
     #defining torch configurations
     #torch.manual_seed(args.seed)
     #torch.cuda.manual_seed(args.seed)
@@ -113,7 +114,7 @@ def main(args):
 
         return loss,accuracy
 
-    file_train=open(args.data_root_dir + '/train_loss_log_res.txt','a+')
+    file_train=open(args.data_root_dir + '/train_loss_log_effb1.txt','a+')
     loss_save=[]
     print('Resuming from', epochs)
 
@@ -147,6 +148,7 @@ def main(args):
             step=step+1
         epoch_loss = running_loss / len(train_dataset)
         epoch_acc = running_corrects.double() / len(train_dataset)
+        writer.add_scalar('Train/Loss', epoch_loss, epoch)
         print(epoch_loss)
         # loss_save.append(val_loss)
         
@@ -162,7 +164,7 @@ def main(args):
                     'loss': epoch_loss,
                     }, PATH)
         if (epoch +1)% 5 ==0:
-          save_path = model_path+'/res_ft{}.pth'.format(epoch+1)
+          save_path = model_path+'/effb1_ft{}.pth'.format(epoch+1)
           torch.save(fusion_network, save_path)
           print ("model saved")
         print("checkpoint saved")
@@ -172,7 +174,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epochs', type=int, default=20)
+    parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--num_hid', type=int, default=512)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
@@ -189,6 +191,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_class',type=int, default=3344, help='Number of output classes')
     parser.add_argument('--learning_rate',type=float,default=0.0001,help='Learning rate')
     args = parser.parse_args()
+
     main(args)
 
 
