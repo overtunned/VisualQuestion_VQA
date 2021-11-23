@@ -42,7 +42,7 @@ def convert_one_hot2int(one_hot):
     return(class_ind)
 
 def main(args):
-
+    writer = SummaryWriter()
     #defining torch configurations
     #torch.manual_seed(args.seed)
     #torch.cuda.manual_seed(args.seed)
@@ -166,6 +166,7 @@ def main(args):
             step=step+1
         epoch_loss = running_loss / len(train_dataset)
         epoch_acc = running_corrects.double() / len(train_dataset)
+        writer.add_scalar('Loss/train', epoch_loss, epoch)
         print(epoch_loss)
         # loss_save.append(val_loss)
         
@@ -185,7 +186,9 @@ def main(args):
           torch.save(fusion_network, save_path)
           print ("model saved")
         print("checkpoint saved")
+    writer.flush() 
     file_train.close()
+    writer.close()
 
 
 
