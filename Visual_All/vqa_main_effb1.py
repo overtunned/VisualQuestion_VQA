@@ -168,7 +168,9 @@ def main(args):
           torch.save(fusion_network, save_path)
           print ("model saved")
         print("checkpoint saved")
+    writer.flush() 
     file_train.close()
+    writer.close()
 
 
 
