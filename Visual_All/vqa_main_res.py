@@ -154,6 +154,7 @@ def main(args):
         val_loss,accuracy = evaluate_val(fusion_network,eval_loader,criterion,device)
         string='Epoch {}:{} loss: {} \t'.format(epoch,args.epochs,running_loss)
         string+='Accuracy : '.format(epoch_acc)
+        print(string)
         file_train.write(string)
         print('{} Loss: {:.4f} Acc: {:.4f}'.format('train', epoch_loss, epoch_acc))
         torch.save({
