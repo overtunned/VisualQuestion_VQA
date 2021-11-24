@@ -81,7 +81,7 @@ def main(args):
     step=0
     #Training starts
     print('Training Starting ......................')
-    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_res.pt"
+    PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model_incep.pt"
     model_path = args.data_root_dir + '/models'
     if os.path.exists(PATH):
       checkpoint = torch.load(PATH)
@@ -113,7 +113,7 @@ def main(args):
 
         return loss,accuracy
 
-    file_train=open(args.data_root_dir + '/train_loss_log_res.txt','a+')
+    file_train=open(args.data_root_dir + '/train_loss_log_incep.txt','a+')
     loss_save=[]
     print('Resuming from', epochs)
 
@@ -163,7 +163,7 @@ def main(args):
                     'loss': epoch_loss,
                     }, PATH)
         if (epoch +1)% 5 ==0:
-          save_path = model_path+'/res_ft{}.pth'.format(epoch+1)
+          save_path = model_path+'/incep_ft{}.pth'.format(epoch+1)
           torch.save(fusion_network, save_path)
           print ("model saved")
         print("checkpoint saved")

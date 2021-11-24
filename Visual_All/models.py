@@ -51,11 +51,11 @@ class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(EncoderCNN, self).__init__()
-        vgg16 = models.vgg16(pretrained=True)
-        modules = list(vgg16.children())[:-1]      # delete the last fc layer.
-        self.resnet = nn.Sequential(*modules)
-        self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
-        for param in self.resnet.parameters():
+        inception = models.inception_v3(pretrained=True)
+        modules = list(inception.children())[:-1]      # delete the last fc layer.
+        self.inception = nn.Sequential(*modules)
+        self.linear = nn.Linear(list(inception.children())[-1].in_features, embed_size)
+        for param in self.inception.parameters():
             param.requires_grad = False
         #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         
@@ -63,7 +63,7 @@ class EncoderCNN(nn.Module):
         """Extract feature vectors from input images."""
         #with torch.no_grad():
         #    features = self.resnet(images)
-        features = self.resnet(images)
+        features = self.inception(images)
         features = features.reshape(features.size(0), -1)
         features=self.linear(features)
         features=torch.tanh(features)
