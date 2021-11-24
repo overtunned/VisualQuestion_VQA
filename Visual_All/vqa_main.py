@@ -14,6 +14,7 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import pdb
 import os
+from torch.utils.tensorboard import SummaryWriter
 
 def question_parse(token_list):
     data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl','rb'))
@@ -42,6 +43,7 @@ def convert_one_hot2int(one_hot):
     return(class_ind)
 
 def main(args):
+    writer = SummaryWriter()
 
     #defining torch configurations
     #torch.manual_seed(args.seed)
@@ -169,6 +171,7 @@ def main(args):
             step=step+1
         epoch_loss = running_loss / len(train_dataset)
         epoch_acc = running_corrects.double() / len(train_dataset)
+        writer.add_scalar('Loss/train', epoch_loss, epoch)
         print(epoch_loss)
         # loss_save.append(val_loss)
         
@@ -188,13 +191,15 @@ def main(args):
           torch.save(fusion_network, save_path)
           print ("model saved")
         print("checkpoint saved")
+    writer.flush()
+    writer.close()
     file_train.close()
 
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epochs', type=int, default=20)
+    parser.add_argument('--epochs', type=int, default=200)
     parser.add_argument('--num_hid', type=int, default=1024)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
