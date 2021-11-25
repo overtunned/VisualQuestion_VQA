@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/proj/digbose92/VQA/VisualQuestion_VQA/Visual_All')
+sys.path.insert(0, '/home/ok_sikha/abhishek/VisualQuestion_VQA/Visual_All')
 import torch
 import torch.nn as nn
 from attention_models import Base_Att

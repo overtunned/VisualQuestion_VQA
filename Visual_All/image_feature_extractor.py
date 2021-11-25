@@ -27,9 +27,9 @@ def image_feats_converter(filenames):
         train_imgids = cPickle.load(open(filenames['train_ids_file'],'rb')).tolist()
         val_imgids = cPickle.load(open(filenames['val_ids_file'],'rb')).tolist()
     else:
-        with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/train_imgids.pkl', 'rb') as f:
+        with open('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train_imgids.pkl', 'rb') as f:
             train_imgids = cPickle.load(f).tolist()
-        with open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/qa_dataset/val_imgids.pkl', 'rb') as f:
+        with open('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/val_imgids.pkl', 'rb') as f:
             val_imgids = cPickle.load(f).tolist()
         cPickle.dump(train_imgids, open(filenames['train_ids_file'], 'wb'))
         cPickle.dump(val_imgids, open(filenames['val_ids_file'], 'wb'))

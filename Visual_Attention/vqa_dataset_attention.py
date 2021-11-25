@@ -33,10 +33,10 @@ def _create_entry(question, answer):
     return entry
 def _load_dataset(dataroot,name):
     question_path = os.path.join(
-        dataroot, 'vgenome_%s2021questions.json' % name)
+        dataroot, 'vgenome_%s2021_questions.json' % name)
     questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
-    answer_path = os.path.join(dataroot, '%s_target_yes_no_ans.pkl' % name)
+    answer_path = os.path.join(dataroot, '%s_target.pkl' % name)
     # answers = cPickle.load(open(answer_path, 'rb'))
     # answers = sorted(answers, key=lambda x: x['question_id'])
     answers = sorted(json.load(open(answer_path)),
@@ -78,7 +78,7 @@ class Dataset_VQA(Dataset):
         if(self.rcnn_pkl_path is not None):
             print('Loading the hdf5 features from rcnn')
             self.pkl_data=pickle.load(open(self.rcnn_pkl_path,'rb'))
-            h5_path=os.path.join(feats_data_path,self.choice+'_rcnn_36.hdf5')
+            h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
             hf=h5py.File(h5_path)
             self.features=hf.get('image_features')
         else:
@@ -178,7 +178,7 @@ class Dataset_VQA(Dataset):
                 feat=torch.from_numpy(self.features[idx])
                 #print(feat.size())
         else:
-            filename='COCO_'+self.choice+'2014_'+str(image_id).zfill(self.filename_len)+'.jpg'
+            filename=str(image_id)+'.jpg'
             idx=self.file_list.index(os.path.join(self.img_dir,filename))
             
             feat=torch.from_numpy(self.features[idx])
@@ -202,10 +202,10 @@ class Dataset_VQA(Dataset):
 
 
 if __name__ == "__main__":
-    image_root_dir="/data/digbose92/VQA/COCO"
+    image_root_dir="/home/ok_sikha/abhishek/VG_100K"
     dictionary=Dictionary.load_from_file('../Visual_All/data/dictionary.pkl')
-    feats_data_path="/data/digbose92/VQA/COCO/train_hdf5_COCO/"
-    data_root="/proj/digbose92/VQA/VisualQuestion_VQA/common_resources"
+    feats_data_path="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
+    data_root="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
     train_dataset=Dataset_VQA(img_root_dir=image_root_dir,feats_data_path=feats_data_path,dictionary=dictionary,dataroot=data_root,arch_choice="resnet152",layer_option="pool")
     train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=1)
 
