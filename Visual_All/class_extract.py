@@ -14,11 +14,11 @@ def modify_entry(label_list,entry):
     entry['Label_name']=label_name
     return(entry)
 
-pickle_file="../common_resources/train_target.pkl"
-val_pickle_file="../common_resources/val_target.pkl"
-label_map_file="../common_resources/trainval_label2ans.pkl"
-num_classes_select=2
-dataroot='data'
+pickle_file="../data/train_target.pkl"
+val_pickle_file="../data/val_target.pkl"
+label_map_file="../data/trainval_label2ans.pkl"
+num_classes_select=3000
+dataroot='../data'
 
 data=pickle.load(open(pickle_file,'rb'))
 answer_data=pickle.load(open(label_map_file,'rb'))

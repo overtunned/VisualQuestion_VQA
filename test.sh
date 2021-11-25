@@ -1,0 +1,1 @@
+ echo $PBS_O_WORKER

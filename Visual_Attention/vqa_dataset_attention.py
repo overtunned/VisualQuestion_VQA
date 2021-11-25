@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '/proj/digbose92/VQA/VisualQuestion_VQA/Visual_All')
+sys.path.insert(0, '/home/ok_sikha/abhishek/VisualQuestion_VQA/Visual_All')
 import numpy as np 
 import torch
 import torchvision.transforms as transforms
@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import cv2
 import torchvision.transforms.functional as F
 from models import *
-from tqdm import tqdm
+from tqdm import tqdmp
 import time
 import h5py
 from flair.embeddings import BertEmbeddings,DocumentPoolEmbeddings
@@ -33,12 +33,14 @@ def _create_entry(question, answer):
     return entry
 def _load_dataset(dataroot,name):
     question_path = os.path.join(
-        dataroot, 'v2_OpenEnded_mscoco_%s2021questions.json' % name)
+        dataroot, 'vgenome_%s2021questions.json' % name)
     questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
     answer_path = os.path.join(dataroot, '%s_target_yes_no_ans.pkl' % name)
-    answers = cPickle.load(open(answer_path, 'rb'))
-    answers = sorted(answers, key=lambda x: x['question_id'])
+    # answers = cPickle.load(open(answer_path, 'rb'))
+    # answers = sorted(answers, key=lambda x: x['question_id'])
+    answers = sorted(json.load(open(answer_path)),
+                       key=lambda x: x['question_id'])
     utils.assert_eq(len(questions), len(answers))
     entries = []
     print(len(questions))
@@ -54,12 +56,12 @@ def _load_dataset(dataroot,name):
 class Dataset_VQA(Dataset):
     """Dataset for VQA applied to the attention case with image features in .hdf5 file 
     """
-    def __init__(self,img_root_dir,feats_data_path,dictionary,dataroot,bert_option=False,rcnn_pkl_path=None,num_classes=2,filename_len=12,choice='train',arch_choice='resnet152',layer_option='pool',transform_set=None):
+    def __init__(self,img_root_dir,feats_data_path,dictionary,dataroot,bert_option=False,rcnn_pkl_path=None,num_classes=3344,filename_len=12,choice='train',arch_choice='resnet152',layer_option='pool',transform_set=None):
 
         #initializations
         self.data_root=dataroot
         self.feats_data_path=feats_data_path
-        self.img_dir=os.path.join(img_root_dir,choice+"2014")
+        self.img_dir=img_root_dir
         self.choice=choice
         self.transform=transform_set
         self.num_classes=num_classes
