@@ -45,9 +45,9 @@ def create_dictionary(dataroot):
 
 def main_run(dataroot,pkl_filename,filenames_dict,image_filenames_dict):
 
-    # dictionary=create_dictionary(dataroot)
-    # dictionary.dump_to_file(os.path.join(dataroot,pkl_filename))
-    # d = Dictionary.load_from_file((os.path.join(dataroot,pkl_filename)))
+    dictionary=create_dictionary(dataroot)
+    dictionary.dump_to_file(os.path.join(dataroot,pkl_filename))
+    d = Dictionary.load_from_file((os.path.join(dataroot,pkl_filename)))
     # print(d.idx2word)
     # # weights, word2emb = create_ft_embedding_init(d.idx2word, ft_filename)
     # # np.save('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/ft_init_%dd.npy' % emb_dim, weights)
@@ -67,7 +67,7 @@ def main_run(dataroot,pkl_filename,filenames_dict,image_filenames_dict):
 
 
     # #image feature extraction here based on functions in image_feature_extractor
-    image_feats_converter(image_filenames_dict)
+    # image_feats_converter(image_filenames_dict)
         
 
 if __name__ == "__main__":

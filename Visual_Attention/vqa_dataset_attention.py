@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import cv2
 import torchvision.transforms.functional as F
 from models import *
-from tqdm import tqdmp
+from tqdm import tqdm
 import time
 import h5py
 from flair.embeddings import BertEmbeddings,DocumentPoolEmbeddings
@@ -33,18 +33,17 @@ def _create_entry(question, answer):
     return entry
 def _load_dataset(dataroot,name):
     question_path = os.path.join(
-        dataroot, 'vgenome_%s2021_questions.json' % name)
+        dataroot, 'vgenome_%s2021_2_questions.json' % name)
     questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
-    answer_path = os.path.join(dataroot, '%s_target.pkl' % name)
-    # answers = cPickle.load(open(answer_path, 'rb'))
-    # answers = sorted(answers, key=lambda x: x['question_id'])
-    answers = sorted(json.load(open(answer_path)),
-                       key=lambda x: x['question_id'])
+    answer_path = os.path.join(dataroot,'cache', '%s_target_top_3000_ans.pkl' % name)
+    answers = cPickle.load(open(answer_path, 'rb'))
+    answers = sorted(answers, key=lambda x: x['question_id'])
+    # print(answers[0])
     utils.assert_eq(len(questions), len(answers))
     entries = []
-    print(len(questions))
-    print(len(answers))
+    print("No. of Questions:", len(questions))
+    print("No. of answers:", len(answers))
     for question, answer in zip(questions, answers):
         utils.assert_eq(question['question_id'], answer['question_id'])
         utils.assert_eq(question['image_id'], answer['image_id'])
@@ -79,23 +78,23 @@ class Dataset_VQA(Dataset):
             print('Loading the hdf5 features from rcnn')
             self.pkl_data=pickle.load(open(self.rcnn_pkl_path,'rb'))
             h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
-            hf=h5py.File(h5_path)
+            hf=h5py.File(h5_path, 'r')
             self.features=hf.get('image_features')
-        else:
-            print('Loading the hdf5 features from resnet152')
+        # else:
+        #     print('Loading the hdf5 features from resnet152')
             
-            h5_path = os.path.join(feats_data_path,self.choice+'_feats_'+self.arch+'_'+self.layer_option+'.hdf5')
-            file_path=os.path.join(feats_data_path,self.choice+'_filenames_'+self.arch+'.txt')
-            fl_p=open(file_path)
-            self.file_list=list(fl_p.readlines())
-            self.file_list=[filename.split("\n")[0] for filename in self.file_list]
-            hf=h5py.File(h5_path)
-            self.features=hf.get('feats')
+        #     h5_path = os.path.join(feats_data_path,self.choice+'_feats_'+self.arch+'_'+self.layer_option+'.hdf5')
+        #     file_path=os.path.join(feats_data_path,self.choice+'_filenames_'+self.arch+'.txt')
+        #     fl_p=open(file_path)
+        #     self.file_list=list(fl_p.readlines())
+        #     self.file_list=[filename.split("\n")[0] for filename in self.file_list]
+        #     hf=h5py.File(h5_path)
+        #     self.features=hf.get('feats')
 
         #loading bert features 
         if(self.bert_option is True):
             #load bert features from .hdf5 file 
-            h5_path_bert=os.path.join(self.data_root,self.choice+'_bert_yes_no.hdf5')
+            h5_path_bert=os.path.join(self.data_root,self.choice+'_bert.hdf5')
             #print(h5_path_bert)
             hf_bert=h5py.File(h5_path_bert)
             self.bert_features=hf_bert.get('bert_embeddings')
@@ -176,7 +175,7 @@ class Dataset_VQA(Dataset):
             if(image_id in self.pkl_data):
                 idx=self.pkl_data[image_id]
                 feat=torch.from_numpy(self.features[idx])
-                #print(feat.size())
+                # print(feat.size())
         else:
             filename=str(image_id)+'.jpg'
             idx=self.file_list.index(os.path.join(self.img_dir,filename))
@@ -203,15 +202,24 @@ class Dataset_VQA(Dataset):
 
 if __name__ == "__main__":
     image_root_dir="/home/ok_sikha/abhishek/VG_100K"
-    dictionary=Dictionary.load_from_file('../Visual_All/data/dictionary.pkl')
+    dictionary=Dictionary.load_from_file('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/dictionary.pkl')
     feats_data_path="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
     data_root="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
-    train_dataset=Dataset_VQA(img_root_dir=image_root_dir,feats_data_path=feats_data_path,dictionary=dictionary,dataroot=data_root,arch_choice="resnet152",layer_option="pool")
+    train_rcnn_pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train36_imgid2idx.pkl"
+    train_dataset=Dataset_VQA(img_root_dir=image_root_dir,
+                                feats_data_path=feats_data_path,
+                                dictionary=dictionary,
+                                dataroot=data_root,
+                                rcnn_pkl_path=train_rcnn_pickle_file,
+                                choice='train',
+                                arch_choice="rcnn",
+                                layer_option="pool")
     train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=1)
 
-    feat,question,label,target=next(iter(train_loader))
+    feat,question,question_sent,question_id,target=next(iter(train_loader))
 
     print(feat.shape)
     print(question)
-    print(label)
+    print(question_sent)
+    print(question_id)
     print(target)

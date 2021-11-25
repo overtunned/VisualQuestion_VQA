@@ -9,9 +9,9 @@ def add_entry(map,label_list):
     return(relabel_list)
 
 
-train_label_file='/proj/digbose92/VQA/VisualQuestion_VQA/common_resources/train_target_top_1000_ans.pkl'
-validation_label_file='/proj/digbose92/VQA/VisualQuestion_VQA/common_resources/validation_target_top_1000_ans.pkl'
-csv_file="data/Top_1000_classes_distribution.csv"
+train_label_file='/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train_target_top_3000_ans.pkl'
+validation_label_file='/home/ok_sikha/abhishek/VisualQuestion_VQA/data/val_target_top_3000_ans.pkl'
+csv_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/Train_3000_Class_Distribution.csv"
 train_dataset=pickle.load(open(train_label_file,'rb'))
 valid_dataset=pickle.load(open(validation_label_file,'rb'))
 
@@ -20,7 +20,7 @@ keys_set=class_distribution['Label_indices'].tolist()
 keys_set=[str(key) for key in keys_set]
 
 label2indices=dict(zip(keys_set,class_distribution['Relabel_class'].tolist()))
-print(label2indices)
+# print(label2indices)
 
 print('RELABELLING TRAINING DATA')
 for data_sample in tqdm(train_dataset):
@@ -34,8 +34,10 @@ for data_sample in tqdm(train_dataset):
 #train_questions_dict={}
 #train_questions_dict['questions']=train_questions
 
-with open('/proj/digbose92/VQA/VisualQuestion_VQA/common_resources/train_target_top_1000_ans.pkl', 'wb') as fp:
+with open('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/cache/train_target_top_3000_ans.pkl', 'wb') as fp:
     pickle.dump(train_dataset, fp)
+
+print(train_dataset[0]['Class_Label'])
 
 
 print('RELABELLING VALIDATION DATA')
@@ -51,7 +53,7 @@ for data_sample in tqdm(valid_dataset):
 
 #valid_questions_dict={}
 #valid_questions_dict['questions']=val_questions
-with open('/proj/digbose92/VQA/VisualQuestion_VQA/common_resources/validation_target_top_1000_ans.pkl','wb') as fp:
+with open('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/cache/validation_target_top_3000_ans.pkl','wb') as fp:
     pickle.dump(valid_dataset, fp)
 
 

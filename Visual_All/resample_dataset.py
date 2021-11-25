@@ -4,8 +4,8 @@ from tqdm import tqdm
 import json
 import time
 
-pkl_file='data/cache/val_target.pkl'
-question_path='data/v2_OpenEnded_mscoco_val2014_questions.json'
+pkl_file='/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train_target_top_3000_ans.pkl'
+question_path='/home/ok_sikha/abhishek/VisualQuestion_VQA/data/vgenome_train2021_questions.json'
 
 
 id_data=pickle.load(open(pkl_file,'rb'))
@@ -36,7 +36,7 @@ for entry_val in entry_list:
         entry_filter_list.append(entry_val)
 
 
-questions = sorted(json.load(open(question_path))['questions'],
+questions = sorted(json.load(open(question_path)),
                        key=lambda x: x['question_id'])
 question_id_tot=[question['question_id'] for question in questions]
 question_id_filter=[entr['question_id'] for entr in entry_filter_list]

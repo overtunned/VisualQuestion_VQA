@@ -89,12 +89,12 @@ if __name__ == "__main__":
                     help='dir where the COCO images are kept')
     parser.add_argument('--choice', default='train', type=str,
                     help='Data split to consider')
-    parser.add_argument('--arch',default='vgg16',type=str)
+    parser.add_argument('--arch',default='resnet152',type=str)
     parser.add_argument('--workers', default=4, type=int,
                     help='number of data loading workers (default: 4)')
     parser.add_argument('--batch_size', default=32, type=int,
                     help='mini-batch size')
-    parser.add_argument('--destination_dir', default="/data/digbose92/VQA/COCO/train_hdf5_COCO", type=str,
+    parser.add_argument('--destination_dir', default="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/feat_tsv", type=str,
                     help='destination location')
     parser.add_argument('--layer_option', default="pool", type=str,
                     help='option between embedding and last pooled features')

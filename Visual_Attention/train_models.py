@@ -114,14 +114,14 @@ def parse_args():
 
 if __name__ == '__main__':
     
-    image_root_dir="/data/digbose92/VQA/COCO"
+    image_root_dir="/home/ok_sikha/abhishek/VG_100K"
     dictionary=Dictionary.load_from_file('../data/dictionary.pkl')
-    feats_data_path="/data/digbose92/VQA/COCO/train_hdf5_COCO/"
-    data_root="/proj/digbose92/VQA/VisualQuestion_VQA/common_resources"
-    npy_file="../../VisualQuestion_VQA/Visual_All/data/glove6b_init_300d.npy"
-    output_folder="/proj/digbose92/VQA/VisualQuestion_VQA/Visual_Attention/results_GRU_uni/results_rcnn_hid_1280_mfh_bert_yes_no_adam"
-    train_rcnn_pickle_file="/proj/digbose92/VQA/VisualQuestion_VQA/Visual_All/data/train36_imgid2idx.pkl"
-    valid_rcnn_pickle_file="/proj/digbose92/VQA/VisualQuestion_VQA/Visual_All/data/val36_imgid2idx.pkl"
+    feats_data_path="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
+    data_root="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
+    # npy_file="../../VisualQuestion_VQA/Visual_All/data/glove6b_init_300d.npy"
+    output_folder="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/results_GRU_uni/results_rcnn_hid_1280_mfh_bert_yes_no_adam"
+    train_rcnn_pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train36_imgid2idx.pkl"
+    valid_rcnn_pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/val36_imgid2idx.pkl"
     seed = 0
     args = parse_args()
     #device_selection

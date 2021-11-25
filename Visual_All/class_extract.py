@@ -14,11 +14,11 @@ def modify_entry(label_list,entry):
     entry['Label_name']=label_name
     return(entry)
 
-pickle_file="../data/train_target.pkl"
-val_pickle_file="../data/val_target.pkl"
-label_map_file="../data/trainval_label2ans.pkl"
+pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/cache/train_target.pkl"
+val_pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/cache/val_target.pkl"
+label_map_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/cache/trainval_label2ans.pkl"
 num_classes_select=3000
-dataroot='../data'
+dataroot='/home/ok_sikha/abhishek/VisualQuestion_VQA/data'
 
 data=pickle.load(open(pickle_file,'rb'))
 answer_data=pickle.load(open(label_map_file,'rb'))
@@ -26,7 +26,7 @@ validation_data=pickle.load(open(val_pickle_file,'rb'))
 
 #print(len(data))
 label_list=[]
-print(answer_data)
+# print(answer_data)
 
 
 for data_sample in data:
@@ -43,15 +43,15 @@ print(len(label_list))
 count_set=Counter(label_list)
 y = OrderedDict(count_set.most_common())
 #scount_set=OrderedDict(label_list)
-keys_set=list(y.keys())
+keys_set=list(y.keys())[:num_classes_select]
 keys_name=[answer_data[id] for id in keys_set]
 
-dict_set=dict(zip(keys_name,list(y.values())))
+dict_set=dict(zip(keys_name,list(y.values())[:num_classes_select]))
 #sorted_x = sorted(dict_set.items(), key=operator.itemgetter(1))
 
-df=pd.DataFrame({'Label_names':keys_name,'Occurences':list(dict_set.items()),'Label_indices':keys_set})
-df.to_csv('data/Train_Class_Distribution.csv',columns=['Label_names','Label_indices','Occurences'],index=False)
-
+df=pd.DataFrame({'Label_names':keys_name,'Occurences':list(dict_set.items()),'Label_indices':keys_set,'Relabel_class':list(range(len(dict_set)))})
+df.to_csv('data/Train_3000_Class_Distribution.csv',columns=['Label_names','Label_indices','Relabel_class','Occurences'],index=False)
+print('len', len(df))
 
 entry_1000_classes=[]
 class_list_set=set(keys_set[0:num_classes_select])
@@ -93,17 +93,17 @@ print(len(list(class_list_set)))
 intersect_list=set(label_sampled).intersection(list(class_list_set))
 
 
-with open('../common_resources/train_target_yes_no_bin.pkl','wb') as f:
+with open('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train_target_top_3000_ans.pkl','wb') as f:
     pickle.dump(entry_1000_classes,f)
-with open('../common_resources/validation_target_yes_no_bin.pkl','wb') as f:
+with open('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/val_target_top_3000_ans.pkl','wb') as f:
     pickle.dump(entry_validation_1000_classes,f)
 
 
 
 print('Resampling the training json data')
 train_question_path = os.path.join(
-        dataroot, 'OpenEnded_mscoco_train2014_questions.json')
-train_questions = sorted(json.load(open(train_question_path))['questions'],
+        dataroot, 'vgenome_train2021_questions.json')
+train_questions = sorted(json.load(open(train_question_path)),
                        key=lambda x: x['question_id'])
 
 
@@ -117,15 +117,15 @@ print(len(question_train_set))
 print(len(entry_1000_classes))
 train_questions_dict={}
 train_questions_dict['questions']=question_train_set
-with open('data/OpenEnded_mscoco_train2014_2_questions.json', 'w') as fp:
-    json.dump(train_questions_dict, fp)
+with open('data/vgenome_train2021_2_questions.json', 'w') as fp:
+    json.dump(question_train_set, fp)
 
 
 
 print('Resampling the validation json data')
 valid_question_path = os.path.join(
-        dataroot, 'OpenEnded_mscoco_val2014_questions.json')
-valid_questions = sorted(json.load(open(valid_question_path))['questions'],
+        dataroot, 'vgenome_val2021_questions.json')
+valid_questions = sorted(json.load(open(valid_question_path)),
                        key=lambda x: x['question_id'])
 
 
@@ -138,9 +138,9 @@ question_valid_set=[valid_questions[id_new] for id_new in id_matches_valid]
 print(len(question_valid_set))
 print(len(entry_validation_1000_classes))
 valid_questions_dict={}
-valid_questions_dict['questions']=question_valid_set
-with open('data/OpenEnded_mscoco_val2014_2_questions.json', 'w') as fp:
-    json.dump(valid_questions_dict, fp)
+valid_questions_dict['questions']=question_train_set
+with open('data/vgenome_val2021_2_questions.json', 'w') as fp:
+    json.dump(question_train_set, fp)
 
 
 
@@ -154,18 +154,3 @@ with open('data/OpenEnded_mscoco_val2014_2_questions.json', 'w') as fp:
 #df = pd.DataFrame.from_dict(d, orient="index")
 
 #print(list(count_set.values())[0:100])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
