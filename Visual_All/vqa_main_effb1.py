@@ -141,10 +141,10 @@ def main(args):
             # statistics
             running_loss += loss.item() * image_samp.size(0)
             running_corrects += torch.sum(preds == labels.data)
-            # if(step%300==0):
-            # #optimizer.zero_grad()
-            #     print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
-            #         .format(epoch, args.epochs, step, total_step, loss.item()))
+            if(step%500==0):
+            #optimizer.zero_grad()
+                print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
+                    .format(epoch, args.epochs, step, total_step, loss.item()))
             step=step+1
         epoch_loss = running_loss / len(train_dataset)
         epoch_acc = running_corrects.double() / len(train_dataset)
@@ -156,6 +156,7 @@ def main(args):
         string='Epoch {}:{} loss: {} Accuracy : {} \t'.format(epoch,args.epochs,running_loss,epoch_acc)
         string+='Eval Accuracy : {}\n'.format(accuracy)
         file_train.write(string)
+        print(string)
         print('{} Loss: {:.4f} Acc: {:.4f}'.format('train', epoch_loss, epoch_acc))
         torch.save({
                     'epoch': epoch,
