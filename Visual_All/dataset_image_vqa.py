@@ -15,7 +15,7 @@ import torchvision.transforms.functional as F
 from models import *
 from tqdm import tqdm
 import time
-
+import h5py
 def _create_entry(img, question, answer):
     answer.pop('image_id')
     answer.pop('question_id')
@@ -86,7 +86,7 @@ def _load_dataset(dataroot, name, img_id2val):
 class VQADataset(Dataset):
     """VQADataset which returns a tuple of image, question tokens and the answer label
     """
-    def __init__(self,image_root_dir,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
+    def __init__(self,image_root_dir,feats_data_path,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
 
         #initializations
         self.img_root=image_root_dir
@@ -107,6 +107,16 @@ class VQADataset(Dataset):
         self.img_id2idx = cPickle.load(
             open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % choice),'rb'))
         self.dictionary=dictionary
+        start_time=time.time()
+        # if(self.rcnn_pkl_path is not None):
+        print('Loading the hdf5 features from rcnn')
+        # self.pkl_data=pickle.load(open(self.rcnn_pkl_path,'rb'))
+        h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
+        hf=h5py.File(h5_path, 'r')
+        self.features=hf.get('image_features')
+        end_time=time.time()
+        elapsed_time=end_time-start_time
+        print('Total elapsed time: %f' %(elapsed_time))
 
         self.entries = _load_dataset(dataroot, choice, self.img_id2idx)
         self.tokenize()
@@ -152,7 +162,12 @@ class VQADataset(Dataset):
             if(self.transform is not None):
                 image=self.transform(im)
             question=torch.from_numpy(np.array(question))
-            return(image,question,label)
+
+            if(image_id in self.img_id2idx):
+                idx=self.img_id2idx[image_id]
+                feat=torch.from_numpy(self.features[idx])
+
+            return(feat,image,question,label)
         else:
             print(filename)
             print('Filepath not found')

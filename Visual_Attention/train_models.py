@@ -115,7 +115,7 @@ def parse_args():
 if __name__ == '__main__':
     
     image_root_dir="/home/ok_sikha/abhishek/VG_100K"
-    dictionary=Dictionary.load_from_file('../data/dictionary.pkl')
+    dictionary=Dictionary.load_from_file('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/dictionary.pkl')
     feats_data_path="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
     data_root="/home/ok_sikha/abhishek/VisualQuestion_VQA/data"
     # npy_file="../../VisualQuestion_VQA/Visual_All/data/glove6b_init_300d.npy"
