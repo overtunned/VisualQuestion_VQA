@@ -15,7 +15,7 @@ import torchvision.transforms.functional as F
 from models import *
 from tqdm import tqdm
 import time
-
+import h5py
 def _create_entry(img, question, answer):
     answer.pop('image_id')
     answer.pop('question_id')
