@@ -14,6 +14,7 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import pdb
 import os
+from torch.utils.tensorboard import SummaryWriter
 
 def question_parse(token_list):
     data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl','rb'))
