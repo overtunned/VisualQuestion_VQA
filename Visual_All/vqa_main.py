@@ -16,7 +16,7 @@ import pdb
 import os
 
 def question_parse(token_list):
-    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl','rb'))
+    data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl','rb'))
     index2word_map=data[1]
     word_list=[]
 
@@ -76,7 +76,7 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/dictionary.pkl')
+    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl')
     train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
     eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
@@ -107,15 +107,18 @@ def main(args):
     #Training starts
     print('Training Starting ......................')
     PATH = "/content/drive/MyDrive/College_paper/VisualQuestion_VQA/model_saved/model.pt"
-    model_path = '/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/models'
-    # if os.path.exists(PATH):
-    #   checkpoint = torch.load(PATH)
-    #   fusion_network.load_state_dict(checkpoint['model_state_dict'])
-    #   optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-    #   args.epochs = checkpoint['epoch']
-    #   loss = checkpoint['loss']
+    model_path = args.data_root_dir + '/models'
+    if os.path.exists(PATH):
+      checkpoint = torch.load(PATH)
+      fusion_network.load_state_dict(checkpoint['model_state_dict'])
+      optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+      epochs = checkpoint['epoch']
+      loss = checkpoint['loss']
+      print('Modeled loaded from ', epochs)
+    else:
+      epochs = 0
 
-    # fusion_network = torch.load('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/vgg_ft19.pth')
+    # fusion_network = torch.load('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/vgg_ft19.pth')
 
 
     def evaluate_val(model,loader,criterion,device):
@@ -133,7 +136,7 @@ def main(args):
 
         return loss,accuracy
 
-    file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/train_loss_log_vgg.txt','a+')
+    file_train=open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/train_loss_log_vgg.txt','a+')
     loss_save=[]
 
     for epoch in range(args.epochs):
@@ -159,7 +162,7 @@ def main(args):
             # statistics
             running_loss += loss.item() * image_samp.size(0)
             running_corrects += torch.sum(preds == labels.data)
-            if(step%300==0):
+            if(step%500==0):
             #optimizer.zero_grad()
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'
                     .format(epoch, args.epochs, step, total_step, loss.item()))
@@ -198,9 +201,9 @@ if __name__ == "__main__":
     parser.add_argument('--num_hid', type=int, default=1024)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
-    parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data", help='location of the associated data')
+    parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1", help='location of the associated data')
     #parser.add_argument('--model', type=str, default='baseline0_newatt')
-    parser.add_argument('--file_name', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data/ft_init_300d.npy")
+    parser.add_argument('--file_name', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/ft_init_300d.npy")
     parser.add_argument('--output', type=str, default='saved_models')
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--max_sequence_length', type=int, default=14)
