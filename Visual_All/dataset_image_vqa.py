@@ -86,7 +86,7 @@ def _load_dataset(dataroot, name, img_id2val):
 class VQADataset(Dataset):
     """VQADataset which returns a tuple of image, question tokens and the answer label
     """
-    def __init__(self,image_root_dir,rcnn_pkl_path,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
+    def __init__(self,image_root_dir,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
 
         #initializations
         self.img_root=image_root_dir
@@ -108,12 +108,10 @@ class VQADataset(Dataset):
             open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % choice),'rb'))
         self.dictionary=dictionary
         start_time=time.time()
-        if(self.rcnn_pkl_path is not None):
-            print('Loading the hdf5 features from rcnn')
-            self.pkl_data=pickle.load(open(self.rcnn_pkl_path,'rb'))
-            h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
-            hf=h5py.File(h5_path, 'r')
-            self.features=hf.get('image_features')
+        print('Loading the hdf5 features from rcnn')
+        h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
+        hf=h5py.File(h5_path, 'r')
+        self.features=hf.get('image_features')
         end_time=time.time()
         elapsed_time=end_time-start_time
         print('Total elapsed time: %f' %(elapsed_time))
@@ -163,11 +161,15 @@ class VQADataset(Dataset):
                 image=self.transform(im)
             question=torch.from_numpy(np.array(question))
 
-            idx=self.file_list.index(os.path.join(self.img_dir,filename))
+            if(image_id in self.img_id2idx):
+                idx=self.img_id2idx[image_id]
+                feat=torch.from_numpy(self.features[idx])
+                
+            # idx=self.file_list.index(os.path.join(self.img_dir,filename))
             
-            feat=torch.from_numpy(self.features[idx])
-            feat=feat.view(feat.size(0),feat.size(1)*feat.size(2))
-            feat=feat.transpose(1,0)
+            # feat=torch.from_numpy(self.features[idx])
+            # feat=feat.view(feat.size(0),feat.size(1)*feat.size(2))
+            # feat=feat.transpose(1,0)
 
             return(feat,image,question,label)
         else:
