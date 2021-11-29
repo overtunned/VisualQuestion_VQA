@@ -107,6 +107,16 @@ class VQADataset(Dataset):
         self.img_id2idx = cPickle.load(
             open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % choice),'rb'))
         self.dictionary=dictionary
+        start_time=time.time()
+        if(self.rcnn_pkl_path is not None):
+            print('Loading the hdf5 features from rcnn')
+            self.pkl_data=pickle.load(open(self.rcnn_pkl_path,'rb'))
+            h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
+            hf=h5py.File(h5_path, 'r')
+            self.features=hf.get('image_features')
+        end_time=time.time()
+        elapsed_time=end_time-start_time
+        print('Total elapsed time: %f' %(elapsed_time))
 
         self.entries = _load_dataset(dataroot, choice, self.img_id2idx)
         self.tokenize()
@@ -152,7 +162,14 @@ class VQADataset(Dataset):
             if(self.transform is not None):
                 image=self.transform(im)
             question=torch.from_numpy(np.array(question))
-            return(image,question,label)
+
+            idx=self.file_list.index(os.path.join(self.img_dir,filename))
+            
+            feat=torch.from_numpy(self.features[idx])
+            feat=feat.view(feat.size(0),feat.size(1)*feat.size(2))
+            feat=feat.transpose(1,0)
+
+            return(feat,image,question,label)
         else:
             print(filename)
             print('Filepath not found')

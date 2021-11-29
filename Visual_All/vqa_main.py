@@ -145,12 +145,13 @@ def main(args):
         running_corrects = 0
         step=0
         for data in tqdm(train_loader):
-            image_samp,question_toks,labels=data
+            feat, image_samp,question_toks,labels=data
             image_samp=image_samp.to(device)
             question_toks=question_toks.to(device)
             labels=labels.to(device)
+            feat = feat.to(device)
             
-            class_outputs=fusion_network(question_toks,image_samp)
+            class_outputs=fusion_network(question_toks,image_samp, feat)
             _, preds = torch.max(class_outputs, 1)
             loss = criterion(class_outputs, labels)
             #question_encoder.zero_grad()
@@ -208,9 +209,9 @@ if __name__ == "__main__":
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--max_sequence_length', type=int, default=14)
     parser.add_argument('--seed', type=int, default=1111, help='random seed')
-    parser.add_argument('--q_embed',type=int, default=2048, help='embedding output of the encoder RNN')
-    parser.add_argument('--img_feats',type=int, default=2048, help='input feature size of the image space')
-    parser.add_argument('--fuse_embed',type=int, default=2048, help='Overall embedding size of the fused network')
+    parser.add_argument('--q_embed',type=int, default=4086, help='embedding output of the encoder RNN')
+    parser.add_argument('--img_feats',type=int, default=4086, help='input feature size of the image space')
+    parser.add_argument('--fuse_embed',type=int, default=4086, help='Overall embedding size of the fused network')
     parser.add_argument('--num_class',type=int, default=3344, help='Number of output classes')
     parser.add_argument('--learning_rate',type=float,default=0.0001,help='Learning rate')
     args = parser.parse_args()

@@ -53,19 +53,24 @@ class EncoderCNN(nn.Module):
         super(EncoderCNN, self).__init__()
         vgg16 = models.vgg16(pretrained=True)
         modules = list(vgg16.children())[:-1]      # delete the last fc layer.
-        self.resnet = nn.Sequential(*modules)
+        self.vgg16 = nn.Sequential(*modules)
         self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
         for param in self.resnet.parameters():
             param.requires_grad = False
         #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         
-    def forward(self, images):
+    def forward(self, images, objects):
         """Extract feature vectors from input images."""
         #with torch.no_grad():
         #    features = self.resnet(images)
-        features = self.resnet(images)
-        features = features.reshape(features.size(0), -1)
-        features=self.linear(features)
+        img_features = self.vgg16(images)
+        img_features = img_features.reshape(img_features.size(0), -1)
+        img_features=self.linear(img_features)
+
+        obj_features = self.vgg16(objects)
+        obj_features = obj_features.reshape(obj_features.size(0), -1)
+        obj_features=self.linear(obj_features)
+        features = img_features * obj_features
         features=torch.tanh(features)
         #features=F.relu(features)
         #features = self.bn(self.linear(features))
@@ -145,12 +150,12 @@ class FusionModule(nn.Module):
         #elf.dropout=nn.Dropout(dropout_rate)
         
 
-    def forward(self,sent_batch, image_batch):
+    def forward(self,sent_batch, image_batch, feature_batch):
         """Forward pass of the Fusion module
         """
         #adding one initial Linear operation
         encoder_hidden_states=self.q_net(sent_batch)
-        image_features=self.im_net(image_batch)
+        image_features=self.im_net(image_batch, feature_batch)
         fuse_embed=encoder_hidden_states*image_features
         #fuse_embed=self.dropout(fuse_embed)
         lin_op=self.embed_layer(fuse_embed)
