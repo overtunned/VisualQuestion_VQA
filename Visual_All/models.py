@@ -55,7 +55,7 @@ class EncoderCNN(nn.Module):
         modules = list(vgg16.children())[:-1]      # delete the last fc layer.
         self.vgg16 = nn.Sequential(*modules)
         self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
-        for param in self.resnet.parameters():
+        for param in self.vgg16.parameters():
             param.requires_grad = False
         #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         
