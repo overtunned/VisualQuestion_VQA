@@ -86,7 +86,7 @@ def _load_dataset(dataroot, name, img_id2val):
 class VQADataset(Dataset):
     """VQADataset which returns a tuple of image, question tokens and the answer label
     """
-    def __init__(self,image_root_dir,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
+    def __init__(self,image_root_dir,rcnn_pkl_path,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
 
         #initializations
         self.img_root=image_root_dir

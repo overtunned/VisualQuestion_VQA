@@ -78,8 +78,10 @@ def main(args):
 
     
     dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl')
-    train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
-    eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
+    train_rcnn_pickle_file="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/train36_imgid2idx.pkl"
+    val_rcnn_pickle_file="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/val36_imgid2idx.pkl"
+    train_dataset = VQADataset(image_root_dir=args.img_root_dir,rcnn_pkl_path = train_rcnn_pickle_file,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
+    eval_dataset = VQADataset(image_root_dir=args.img_root_dir,rcnn_pkl_path= val_rcnn_pickle_file,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
 
     #model definition 
