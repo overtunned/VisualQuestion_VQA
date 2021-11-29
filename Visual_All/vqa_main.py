@@ -129,9 +129,9 @@ def main(args):
         accuracy=0
         print('Evaluation started')
         with torch.no_grad():
-            for image_sample,question_token,labels in tqdm(loader):
-                image_sample,question_token,labels = image_sample.to(device),question_token.to(device),labels.to(device)
-                output=model.forward(question_token,image_sample)
+            for feat, image_sample,question_token,labels in tqdm(loader):
+                feat,image_sample,question_token,labels = feat.to(device),image_sample.to(device),question_token.to(device),labels.to(device)
+                output=model.forward(question_token,image_sample, feat)
                 loss+= criterion(output,labels).item()
                 ps = torch.exp(output)
                 equality= (labels.data == ps.max(dim=1)[1])
