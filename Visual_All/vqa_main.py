@@ -78,10 +78,10 @@ def main(args):
 
     
     dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl')
-    train_rcnn_pickle_file="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/train36_imgid2idx.pkl"
-    val_rcnn_pickle_file="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/val36_imgid2idx.pkl"
-    train_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
-    eval_dataset = VQADataset(image_root_dir=args.img_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
+    # train_rcnn_pickle_file="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/train36_imgid2idx.pkl"
+    # val_rcnn_pickle_file="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/val36_imgid2idx.pkl"
+    train_dataset = VQADataset(image_root_dir=args.img_root_dir,feats_data_path = args.feat_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='train',transform_set=train_transform)
+    eval_dataset = VQADataset(image_root_dir=args.img_root_dir,feats_data_path= args.feat_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='val',transform_set=validate_transform)
     
 
     #model definition 
@@ -205,6 +205,7 @@ if __name__ == "__main__":
     parser.add_argument('--num_hid', type=int, default=1024)
     parser.add_argument('--crop_size', type=int, default=224 , help='size for randomly cropping images')
     parser.add_argument('--img_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the visual genome images')
+    parser.add_argument('--feat_root_dir', type=str, default="/content/drive/MyDrive/College_paper/Dataset", help='location of the frcnn features visual genome images')
     parser.add_argument('--data_root_dir', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1", help='location of the associated data')
     #parser.add_argument('--model', type=str, default='baseline0_newatt')
     parser.add_argument('--file_name', type=str, default="/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/ft_init_300d.npy")

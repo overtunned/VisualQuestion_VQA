@@ -86,7 +86,7 @@ def _load_dataset(dataroot, name, img_id2val):
 class VQADataset(Dataset):
     """VQADataset which returns a tuple of image, question tokens and the answer label
     """
-    def __init__(self,image_root_dir,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
+    def __init__(self,image_root_dir,feats_data_path,dictionary,dataroot,filename_len=12,choice='train',transform_set=None):
 
         #initializations
         self.img_root=image_root_dir
@@ -108,7 +108,9 @@ class VQADataset(Dataset):
             open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % choice),'rb'))
         self.dictionary=dictionary
         start_time=time.time()
+        # if(self.rcnn_pkl_path is not None):
         print('Loading the hdf5 features from rcnn')
+        # self.pkl_data=pickle.load(open(self.rcnn_pkl_path,'rb'))
         h5_path=os.path.join(feats_data_path,self.choice+'36.hdf5')
         hf=h5py.File(h5_path, 'r')
         self.features=hf.get('image_features')
