@@ -67,7 +67,7 @@ class EncoderCNN(nn.Module):
         img_features = img_features.reshape(img_features.size(0), -1)
         img_features=self.linear(img_features)
 
-        obj_features = obj_features.reshape(objects.size(0), -1)
+        obj_features = objects.reshape(objects.size(0), -1)
         obj_features=self.linear(obj_features)
         features = img_features * obj_features
         features=torch.tanh(features)
