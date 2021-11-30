@@ -67,10 +67,10 @@ class EncoderCNN(nn.Module):
         #    features = self.resnet(images)
         img_features = self.vgg16(images)
         img_features = img_features.reshape(img_features.size(0), -1)
-        img_features=self.linear(img_features)
+        img_features=self.linear1(img_features)
 
         obj_features = objects.reshape(objects.size(0), -1)
-        obj_features=self.linear(obj_features)
+        obj_features=self.linear2(obj_features)
         features = img_features * obj_features   # 128x73728 and 25088x4086
         features=torch.tanh(features)
         #features=F.relu(features)
