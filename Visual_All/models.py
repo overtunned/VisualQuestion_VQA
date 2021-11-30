@@ -54,7 +54,9 @@ class EncoderCNN(nn.Module):
         vgg16 = models.vgg16(pretrained=True)
         modules = list(vgg16.children())[:-1]      # delete the last fc layer.
         self.vgg16 = nn.Sequential(*modules)
-        self.linear = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
+        self.linear1 = nn.Linear(list(vgg16.children())[2][0].in_features, embed_size)
+        self.linear2 = nn.Linear(73728, embed_size)
+
         for param in self.vgg16.parameters():
             param.requires_grad = False
         #self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
@@ -69,7 +71,7 @@ class EncoderCNN(nn.Module):
 
         obj_features = objects.reshape(objects.size(0), -1)
         obj_features=self.linear(obj_features)
-        features = img_features * obj_features
+        features = img_features * obj_features   # 128x73728 and 25088x4086
         features=torch.tanh(features)
         #features=F.relu(features)
         #features = self.bn(self.linear(features))
