@@ -14,6 +14,7 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import pdb
 import os
+from torch.utils.tensorboard import SummaryWriter
 
 def question_parse(token_list):
     data=pickle.load(open('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl','rb'))
@@ -169,10 +170,14 @@ def main(args):
         epoch_loss = running_loss / len(train_dataset)
         epoch_acc = running_corrects.double() / len(train_dataset)
         writer.add_scalar('Loss/train', epoch_loss, epoch)
+        writer.add_scalar('Accuracy/train', epoch_acc, epoch)
         print(epoch_loss)
         # loss_save.append(val_loss)
         
         val_loss,accuracy = evaluate_val(fusion_network,eval_loader,criterion,device)
+        writer.add_scalar('Accuracy/val', accuracy, epoch)
+        writer.add_scalar('Loss/val', val_loss, epoch)
+
         string='Epoch {}:{} loss: {} Accuracy : {} \t'.format(epoch,args.epochs,running_loss,epoch_acc)
         string+='Eval Accuracy : {}\n'.format(accuracy)
         file_train.write(string)
