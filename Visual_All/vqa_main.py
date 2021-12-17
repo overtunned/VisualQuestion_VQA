@@ -136,7 +136,7 @@ def main(args):
 
         return loss,accuracy
 
-    file_train=open(os.join(args.data_root_dir,'train_loss_log_vgg.txt'),'a+')
+    file_train=open(os.path.join(args.data_root_dir,'train_loss_log_vgg.txt'),'a+')
     loss_save=[]
 
     for epoch in range(args.epochs):
@@ -264,7 +264,7 @@ def test(args):
     #split path and take the last directory name as the model name 
     model_name=args.test_model_path.split('/')[-1]
     model_name = model_name.split('.')[0]
-    file_train=open(os.join(args.data_root_dir, args.test_output_file),'a+')
+    file_train=open(os.path.join(args.data_root_dir, args.test_output_file),'a+')
     string='model : {}\tloss: {}\tAccuracy : {} \n'.format(args.test_model_name, loss,accuracy)
     file_train.write(string)
     file_train.close()
