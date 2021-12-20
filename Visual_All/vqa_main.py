@@ -6,7 +6,8 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import numpy as np
 import pickle
-sys.path.append('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/Visual_All')
+import sys
+sys.path.append('/content/VisualQuestion_VQA/Visual_All')
 from dataset_vqa import Dictionary, VQAFeatureDataset
 from models import EncoderLSTM, FusionModule, EncoderCNN
 from dataset_image_vqa import VQADataset
