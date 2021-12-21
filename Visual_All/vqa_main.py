@@ -298,8 +298,8 @@ if __name__ == "__main__":
     # parser.add_argument('--test_max_sequence_length', type=int, default=14)
     # parser.add_argument('--test_img_root_dir', type=str, default="/home/ok_sikha/abhishek/VG_100K", help='location of the visual genome images')
     # parser.add_argument('--test_feat_root_dir', type=str, default="/home/ok_sikha/abhishek/VisualQuestion_VQA/data", help='location of the frcnn features visual genome images')
-    parser.add_argument('--test_output_file', type=str, default="frcnn_vgg_without_resnet.txt")
-    parser.add_argument('--test_model_path', type=str, default='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/models/frcnn_vgg_without_resnet75.pth')
+    parser.add_argument('--test_output_file', type=str, default="res_ft.txt")
+    parser.add_argument('--test_model_path', type=str, default='/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/models/res_ft155.pth')
     parser.add_argument('--test_seed', type=int, default=1111, help='random seed')
 
     args = parser.parse_args()
