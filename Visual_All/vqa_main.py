@@ -214,7 +214,7 @@ def test(args):
                              (0.229, 0.224, 0.225))])
 
     
-    dictionary = Dictionary.load_from_file('/home/ok_sikha/abhishek/VisualQuestion_VQA/data/dictionary.pkl')
+    dictionary = Dictionary.load_from_file('/content/drive/MyDrive/College_paper/VisualQuestion_VQA/data1/dictionary.pkl')
     # train_rcnn_pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/train36_imgid2idx.pkl"
     # val_rcnn_pickle_file="/home/ok_sikha/abhishek/VisualQuestion_VQA/data/val36_imgid2idx.pkl"
     test_dataset = VQADataset(image_root_dir=args.img_root_dir,feats_data_path = args.feat_root_dir,dictionary=dictionary,dataroot=args.data_root_dir,choice='test',transform_set=test_transform)
