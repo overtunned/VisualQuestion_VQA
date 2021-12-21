@@ -303,5 +303,5 @@ if __name__ == "__main__":
     parser.add_argument('--test_seed', type=int, default=1111, help='random seed')
 
     args = parser.parse_args()
-    main(args)
+    # main(args)
     test(args)
